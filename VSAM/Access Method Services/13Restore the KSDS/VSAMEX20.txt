@@ -1,0 +1,11 @@
+//TECN258A  JOB NOTIFY=&SYSUID
+//STEP1 EXEC PGM=IDCAMS
+//SYSPRINT DD SYSOUT=*
+//SYSOUT   DD SYSOUT=*
+//BACKUP   DD DSN=TECN258.TRAIN.DETAILS.KSDSBKP,DISP=SHR
+//SYSIN    DD *                                        
+     IMPORT                                 -
+     INFILE(BACKUP)                         -
+     OUTDATASET(TECN258.TRAIN.DETAILS.KSDS) -
+     INTOEMPTY
+/*

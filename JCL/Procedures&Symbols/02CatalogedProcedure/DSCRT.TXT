@@ -1,0 +1,6 @@
+//DSCRT     PROC
+//STEPA     EXEC PGM=IEFBR14
+//DD0       DD DSN=&NAME,
+//             DISP=(NEW,CATLG,DELETE),
+//             SPACE=(TRK,(1,1)),
+//             DCB=(LRECL=80,RECFM=FB,DSORG=PS)
