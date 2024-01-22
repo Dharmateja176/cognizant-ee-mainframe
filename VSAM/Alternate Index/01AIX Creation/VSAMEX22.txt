@@ -1,0 +1,15 @@
+//TECN258M JOB NOTIFY=&SYSUID
+//STEP1    EXEC PGM=IDCAMS
+//SYSPRINT DD   SYSOUT=*
+//SYSOUT   DD   SYSOUT=*
+//SYSIN    DD  *
+           DEFINE AIX(NAME(TECN258.TRAIN.DETAILS.AIX) -
+           RELATE(TECN258.TRAIN.DETAILS.KSDS) -
+           CYLINDERS(10,10) -
+           CISZ(4096) -
+           KEYS(15,6) -
+           RECORDSIZE(80,80) -
+           FREESPACE(10,10) -
+           NONUNIQUEKEY -
+           VOLUME(ZAPRD4))
+/*
