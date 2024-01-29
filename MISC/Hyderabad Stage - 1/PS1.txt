@@ -1,0 +1,11 @@
+SHARE_ID NO_OFSHARES COMPANY_NAME        SHARE_PRICE 
+SH010    020         ABC INFO TECH       129.25      
+SH090    025         APPLE INFO          156.90      
+SH020    050         ORANGE INFO SYSTEMS 100.00      
+SH02@    056         SQUARE SYSEMS       132.37      
+SH011    034         CUBE TECHNOLOGIES   145.89      
+SH019    045         ECHO SYSTEMS        111.11      
+SH01#    035         MATRIX SOLUTIONS    123.23      
+SH022    020         X SYSTEM SOLUTIONS  145.35      
+SH036    035         I CLOUD SOLUTIONS   111.25      
+SH045    010         TNT SYSTEMS         154.45      
