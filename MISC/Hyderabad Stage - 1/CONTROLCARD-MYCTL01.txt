@@ -1,0 +1,7 @@
+   DEFINE CLUSTER(NAME(TECN258.JCL.ASSMT02.SHARE.KSDS) -  
+          CISZ(4096) -                                    
+          FREESPACE(10,10) -                              
+          RECORDSIZE(80,80) -                             
+          KEYS(5,0) -                                     
+          VOLUMES(ZAPRD4) -                               
+          TRACKS(1,1))                                    

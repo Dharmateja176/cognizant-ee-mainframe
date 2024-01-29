@@ -1,0 +1,5 @@
+//KSDSCRT  PROC                                       
+//STEP1    EXEC PGM=IDCAMS                            
+//SYSPRINT DD SYSOUT=*                                
+//SYSOUT   DD SYSOUT=*                                
+//SYSIN    DD DSN=TECN258.JCL.MYPROC(MYCTL01),DISP=SHR
