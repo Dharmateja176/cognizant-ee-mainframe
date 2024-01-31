@@ -1,17 +1,17 @@
-//TECN258R JOB (DEV),'DHARMA',NOTIFY=&SYSUID,                           00010007
-//             CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1)                        00020008
-//PROCLOC JCLLIB ORDER=TECN258.JCL.CC01.PDS                             00030006
-//STEP010 EXEC PROC=CATDSCRT,DSNAME=TECN258.JCL.CC01.PS2                00040003
-//SYSPRINT DD SYSOUT=*                                                  00040103
-/*                                                                      00041002
-//STEP020 EXEC PGM=IEBGENER                                             00050000
-//SYSPRINT DD SYSOUT=*                                                  00060000
-//SYSOUT DD SYSOUT=*                                                    00070000
-//SYSIN DD DUMMY                                                        00080000
-//SYSUT1 DD *                                                           00090000
-***EMPLOYEE SAMPLE DATA***                                              00100000
-/*                                                                      00110000
-//SYSUT2 DD DSN=TECN258.JCL.CC01.PS2,DISP=SHR                           00120000
+//TECN258R JOB (DEV),'DHARMA',NOTIFY=&SYSUID,                           
+//             CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1)                        
+//PROCLOC JCLLIB ORDER=TECN258.JCL.CC01.PDS                             
+//STEP010 EXEC PROC=CATDSCRT,DSNAME=TECN258.JCL.CC01.PS2                
+//SYSPRINT DD SYSOUT=*                                                  
+/*                                                                      
+//STEP020 EXEC PGM=IEBGENER                                             
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT DD SYSOUT=*                                                    
+//SYSIN DD DUMMY                                                        
+//SYSUT1 DD *                                                           
+***EMPLOYEE SAMPLE DATA***                                              
+/*                                                                      
+//SYSUT2 DD DSN=TECN258.JCL.CC01.PS2,DISP=SHR                           
 //STEP030 EXEC PGM=IDCAMS                                               
 //SYSPRINT DD SYSOUT=*                                                  
 //INDD DD DSN=TECN258.JCL.CC01.PS1,DISP=SHR                             
