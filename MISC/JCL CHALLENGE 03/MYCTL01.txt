@@ -1,0 +1,7 @@
+  SORT FIELDS=(1,5,CH,A)
+  OUTREC IFTHEN=(WHEN=(1,2,CH,EQ,C'AC'),
+        OVERLAY=(36:C'ACTION')),
+        IFTHEN=(WHEN=(1,2,CH,EQ,C'TH'),
+        OVERLAY=(36:C'THRILLER')),
+        IFTHEN=(WHEN=(1,2,CH,EQ,C'SU',OR,1,2,CH,EQ,C'FI'),
+        OVERLAY=(36:C'OTHERS'))
