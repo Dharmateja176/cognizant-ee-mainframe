@@ -1,6 +1,6 @@
 ## Hello!
 
-**Please use it for only educational Purposes**
+**Please use this repo for educational Purposes**
 
 **Pull Requests** are appreciated, but please follow the folder structure.  
 
