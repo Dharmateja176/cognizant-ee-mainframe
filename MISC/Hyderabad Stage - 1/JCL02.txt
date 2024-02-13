@@ -20,12 +20,14 @@
    OUTDATASET(TECN210.JCL.ASSMT02.SHARE.KSDS)                           00120012
 /*                                                                      00130006
 //        ELSE                                                          00140007
-//STEP040 EXEC PGM=IDCAMS                                               00150006
-//SYSPRINT DD SYSOUT=*                                                  00160006
-//SYSIN DD *                                                            00170006
-  PRINT-                                                                00180010
-'DATASET IS EMPTY'-                                                    00180112
-  CHAR                                                                  00181009
+//STEP040  EXEC PGM=IEBGENER
+//SYSPRINT DD SYSOUT=*
+//SYSOUT   DD SYSOUT=*
+//SYSUT1   DD *
+  DATASET IS EMPTY
+/*
+//SYSUT2   DD SYSOUT=*
+//SYSIN    DD DUMMY
 /*                                                                      00190006
 //        ENDIF                                                         00200013
 //STEP050 EXEC PGM=IDCAMS                                               00210013
