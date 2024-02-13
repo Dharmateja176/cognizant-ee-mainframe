@@ -1,7 +1,9 @@
-   DEFINE CLUSTER(NAME(TECN258.JCL.ASSMT02.SHARE.KSDS) -  
-          CISZ(4096) -                                    
-          FREESPACE(10,10) -                              
-          RECORDSIZE(80,80) -                             
-          KEYS(5,0) -                                     
-          VOLUMES(ZAPRD4) -                               
-          TRACKS(1,1))                                    
+   DEFINE CLUSTER(          -                                           00010002
+   NAME(TECN210.JCL.ASSMT01.STUD.KSDS)  -                               00020005
+   INDEXED -                                                            00030003
+   KEYS(6,0)  -                                                         00040005
+   RECSZ(80,80)  -                                                      00050003
+   TRACKS(1,1)   -                                                      00060003
+   FREESPACE(10,10) -                                                   00070003
+   VOLUMES(ZAPRD4)  -                                                   00080003
+   CISZ(4096))                                                          00090003

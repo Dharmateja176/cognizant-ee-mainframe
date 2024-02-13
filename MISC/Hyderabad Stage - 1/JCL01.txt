@@ -1,80 +1,99 @@
-//TECN258  JOB 'DHARMA',NOTIFY=&SYSUID
-//DSCRT    PROC
-//STEP001  EXEC PGM=IEFBR14
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SYSDUMP  DD SYSOUT=*
-//DD0      DD DSN=&DSNAME,
-//            DISP=(MOD,DELETE,DELETE),
-//            SPACE=(TRK,(1,1)),
-//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800,DSORG=PS)
-//*
-//STEP002  EXEC PGM=IEFBR14
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SYSDUMP  DD SYSOUT=*
-//DD1      DD DSN=&DSNAME,
-//            DISP=(NEW,CATLG,DELETE),
-//            VOL=SER=ZAPRD4,
-//            SPACE=(TRK,(1,1)),
-//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800,DSORG=PS)
-//         PEND
-//*
-//STEP003  EXEC DSCRT,DSNAME=TECN258.JCL.ASSMT02.SHARE.PS2
-//STEP004  EXEC DSCRT,DSNAME=TECN258.JCL.ASSMT02.SHARE.PS3
-//STEP005  EXEC DSCRT,DSNAME=TECN258.JCL.ASSMT02.SHARE.PS4
-//STEP006  EXEC DSCRT,DSNAME=TECN258.JCL.ASSMT02.SHARE.PS5
-//STEP007  EXEC DSCRT,DSNAME=TECN258.JCL.ASSMT02.SHARE.PS6
-//*
-//STEP010  EXEC PGM=SORT
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SORTIN   DD DSN=TECN258.JCL.ASSMT02.SHARE.PS1,DISP=SHR
-//SORTOUT  DD DSN=TECN258.JCL.ASSMT02.SHARE.PS2,DISP=SHR
-//SYSIN    DD *
-  SORT FIELDS=(1,5,CH,A,10,3,CH,A),
-  SKIPREC=1
-  OMIT COND=(5,1,CH,EQ,C'@',OR,5,1,CH,EQ,C'#')
-/*
-//STEP020  EXEC PGM=SORT
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SORTIN   DD DSN=TECN258.JCL.ASSMT02.SHARE.PS2,DISP=SHR
-//SORTOUT  DD DSN=TECN258.JCL.ASSMT02.SHARE.PS3,DISP=SHR
-//SYSIN    DD *
-  SORT FIELDS=COPY,
-  SKIPREC=2,
-  STOPAFT=6
-/*
-//*
-//STEP030  EXEC PGM=SORT
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SORTIN   DD DSN=TECN258.JCL.ASSMT02.SHARE.PS2,DISP=SHR
-//SORTOUT  DD DSN=TECN258.JCL.ASSMT02.SHARE.PS4,DISP=SHR
-//SYSIN    DD *
-  SORT FIELDS=COPY
-/*
-//*
-//STEP040  EXEC PGM=SORT
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SORTIN   DD DSN=TECN258.JCL.ASSMT02.SHARE.PS2,DISP=SHR
-//SORTOUT  DD DSN=TECN258.JCL.ASSMT02.SHARE.PS5,DISP=SHR
-//SYSIN    DD *
-  SORT FIELDS=COPY
-  OUTFIL REMOVECC,
-  HEADER1=(12:'***SHARE DETAILS***'),
-  TRAILER1=(2:'TOTAL NUMBER OF SHARES:',TOT=(10,3,ZD,LENGTH=4))
-/*
-//*
-//STEP050  EXEC PGM=SORT
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SORTIN   DD DSN=TECN258.JCL.ASSMT02.SHARE.PS2,DISP=SHR
-//SORTOUT  DD DSN=TECN258.JCL.ASSMT02.SHARE.PS6,DISP=SHR
-//SYSIN    DD *
-  SORT FIELDS=COPY
-  OUTREC FINDREP=(INOUT=(C'A',C'@'),STARTPOS=23,ENDPOS=42)
+//TECN210S JOB NOTIFY=&SYSUID                                           00010001
+//DSCRT PROC                                                            00050001
+//STEP001 EXEC PGM=IEFBR14                                              00060001
+//DD1     DD   DSN=&DSNAME..PS2,                                        00070027
+//             DISP=(MOD,DELETE,DELETE),                                00071005
+//             SPACE=(TRK,(0),RLSE),                                    00072027
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)                      00073005
+//DD2     DD   DSN=&DSNAME..PS3,                                        00080027
+//             DISP=(MOD,DELETE,DELETE),                                00081005
+//             SPACE=(TRK,(0),RLSE),                                    00082027
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)                      00083005
+//DD3     DD   DSN=&DSNAME..PS4,                                        00090027
+//             DISP=(MOD,DELETE,DELETE),                                00091005
+//             SPACE=(TRK,(0),RLSE),                                    00092027
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)                      00093005
+//DD4     DD   DSN=&DSNAME..PS5,                                        00100027
+//             DISP=(MOD,DELETE,DELETE),                                00101005
+//             SPACE=(TRK,(0),RLSE),                                    00102027
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)                      00103005
+//DD5     DD   DSN=&DSNAME..PS6,                                        00110027
+//             DISP=(MOD,DELETE,DELETE),                                00120005
+//             SPACE=(TRK,(0),RLSE),                                    00121027
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)                      00122005
+//STEP002 EXEC PGM=IEFBR14                                              00130001
+//DD1     DD   DSN=&DSNAME..PS2,                                        00140010
+//             DISP=(NEW,CATLG,DELETE),                                 00150003
+//             SPACE=(TRK,(1,1)),                                       00151004
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)                      00152004
+//DD2     DD   DSN=&DSNAME..PS3,                                        00160026
+//             DISP=(NEW,CATLG,DELETE),                                 00170003
+//             SPACE=(TRK,(1,1)),                                       00171004
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)                      00172004
+//DD3     DD   DSN=&DSNAME..PS4,                                        00180026
+//             DISP=(NEW,CATLG,DELETE),                                 00190003
+//             SPACE=(TRK,(1,1)),                                       00191005
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)                      00192004
+//DD4     DD   DSN=&DSNAME..PS5,                                        00200026
+//             DISP=(NEW,CATLG,DELETE),                                 00210003
+//             SPACE=(TRK,(1,1)),                                       00211004
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)                      00212004
+//DD5     DD   DSN=&DSNAME..PS6,                                        00220026
+//             DISP=(NEW,CATLG,DELETE),                                 00230003
+//             SPACE=(TRK,(1,1)),                                       00231004
+//             DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)                      00232004
+//      PEND                                                            00240022
+//STEP003 EXEC DSCRT,                                                   00250020
+//             DSNAME=TECN210.JCL.ASSMT02.SHARE                         00251020
+//STEP010 EXEC PGM=SORT                                                 00260001
+//SYSPRINT DD SYSOUT=*                                                  00270001
+//SYSOUT DD SYSOUT=*                                                    00280011
+//SYSDUMP DD SYSOUT=*                                                   00281011
+//SORTIN DD DSN=TECN210.JCL.ASSMT02.SHARE.PS1,DISP=SHR                  00290011
+//SORTOUT DD DSN=TECN210.JCL.ASSMT02.SHARE.PS2,DISP=SHR                 00300011
+//SYSIN DD *                                                            00310001
+   SORT FIELDS=(1,5,CH,A,10,3,CH,A),                                    00320024
+   SKIPREC=1                                                            00330024
+   OMIT COND=(5,1,CH,EQ,C'@',OR,5,1,CH,EQ,C'#')                         00340025
+/*                                                                      00350005
+//STEP020  EXEC PGM=SORT                                                00360027
+//SYSPRINT DD SYSOUT=*                                                  00370027
+//SYSOUT DD SYSOUT=*                                                    00380027
+//SORTIN DD DSN=TECN210.JCL.ASSMT02.SHARE.PS2,DISP=SHR                  00381027
+//SORTOUT DD DSN=TECN210.JCL.ASSMT02.SHARE.PS3,DISP=SHR                 00382027
+//SYSIN DD *                                                            00390027
+    SORT FIELDS=COPY,                                                   00400027
+    SKIPREC=1,                                                          00410027
+    STOPAFT=7                                                           00420027
+/*                                                                      00430027
+//STEP030 EXEC PGM=SORT                                                 00440028
+//SYSPRINT DD SYSOUT=*                                                  00450028
+//SYSOUT DD SYSOUT=*                                                    00460028
+//SORTIN DD DSN=TECN210.JCL.ASSMT02.SHARE.PS2,DISP=SHR                  00470028
+//SORTOUT DD DSN=TECN210.JCL.ASSMT02.SHARE.PS4,DISP=SHR                 00480028
+//SYSIN DD *                                                            00490028
+   SORT FIELDS=COPY                                                     00500028
+/*                                                                      00510028
+//STEP040 EXEC PGM=SORT                                                 00520028
+//SYSPRINT DD SYSOUT=*                                                  00530028
+//SYSOUT DD SYSOUT=*                                                    00540028
+//SORTIN DD DSN=TECN210.JCL.ASSMT02.SHARE.PS2,DISP=SHR                  00541028
+//SORTOUT DD DSN=TECN210.JCL.ASSMT02.SHARE.PS5,DISP=SHR                 00542028
+//SYSIN DD *                                                            00550028
+   SORT FIELDS=COPY                                                     00560028
+   OUTFIL REMOVECC,                                                     00570029
+   HEADER1=(12:'***SHARE THE DETAILS***'),                              00580029
+   TRAILER1=(2:'TOTAL NUMBER OF SHARES:',TOT=(10,3,ZD,LENGTH=4))        00590029
+/*                                                                      00600029
+//STEP040 EXEC PGM=SORT                                                 00610030
+//SYSPRINT DD SYSOUT=*                                                  00620030
+//SYSOUT DD SYSOUT=*                                                    00630030
+//SORTIN DD DSN=TECN210.JCL.ASSMT02.SHARE.PS2,DISP=SHR                  00631030
+//SORTOUT DD DSN=TECN210.JCL.ASSMT02.SHARE.PS6,DISP=SHR                 00632030
+//SYSIN DD *                                                            00640030
+   SORT FIELDS=COPY                                                     00650030
+   OUTREC FINDREP=(INOUT=(C'A',C'@'),STARTPOS=23,ENDPOS=42)             00660030
+                         
+                         
 /*
 //*

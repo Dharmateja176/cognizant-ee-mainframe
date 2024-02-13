@@ -1,59 +1,57 @@
-//TECN258A JOB 'DHARMA',NOTIFY=&SYSUID
-//JCL13    JCLLIB ORDER=TECN258.JCL.MYPROC
-//STEP010  EXEC KSDSCRT
-//STEP020  EXEC PGM=IDCAMS
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SYSIN    DD *
-  PRINT -
-  INDATASET(TECN258.JCL.ASSMT02.SHARE.PS2) -
-  COUNT(1)
-/*
-//IFSTEP01 IF STEP020.RC=0 THEN
-//STEP030  EXEC PGM=IDCAMS
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SYSIN    DD *
-  REPRO -
-  INDATASET(TECN258.JCL.ASSMT02.SHARE.PS2) -
-  OUTDATASET(TECN258.JCL.ASSMT02.SHARE.KSDS)
-/*
-//         ELSE
-//STEP040  EXEC PGM=IDCAMS
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SYSIN    DD *
-  PRINT -
-  'DATASET IS EMPTY' -
-  CHAR
-/*
-//         ENDIF
-//STEP050  EXEC PGM=IDCAMS
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SYSIN    DD *
-  DEFINE AIX(NAME(TECN258.JCL.ASSMT02.SHARE.AIX) -
-             RELATE(TECN258.JCL.ASSMT02.SHARE.KSDS) -
-             KEYS(20,23) -
-             RECORDSIZE(80,80) -
-             NONUNIQUEKEY -
-             CISZ(4096) -
-             VOLUMES(ZAPRD4) -
-             TRACKS(1,1) -
-             FREESPACE(10,10))
-/*
-//STEP060  EXEC PGM=IDCAMS
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SYSIN    DD *
-  BLDINDEX -
-  INDATASET(TECN258.JCL.ASSMT02.SHARE.KSDS) -
-  OUTDATASET(TECN258.JCL.ASSMT02.SHARE.AIX)
-/*
-//STEP070  EXEC PGM=IDCAMS
-//SYSPRINT DD SYSOUT=*
-//SYSOUT   DD SYSOUT=*
-//SYSIN    DD *
-  DEFINE PATH(NAME(TECN258.JCL.ASSMT02.SHARE.PATH) -
-         PATHENTRY(TECN258.JCL.ASSMT02.SHARE.AIX))
-/*
+//TECN210S JOB NOTIFY=&SYSUID                                           00010013
+//JCL12    JCLLIB ORDER=TECN210.JCL.MYPROC                              00010106                                                                    
+//STEP010 EXEC KSDSCRT                                                  00030006
+//SYSPRINT DD SYSOUT=*                                                  00031003
+//SYSOUT DD SYSOUT=*                                                    00032003
+//STEP020 EXEC PGM=IDCAMS                                               00033006
+//SYSPRINT DD SYSOUT=*                                                  00034006
+//SYSOUT DD SYSOUT=*                                                    00035006
+//SYSIN DD *                                                            00036006
+  PRINT INDATASET(TECN210.JCL.ASSMT02.SHARE.PS2) -                      00037010
+  COUNT(1)                                                              00038010
+/*                                                                      00040006
+//IFSTEP IF STEP020.RC=0 THEN                                           00050011
+//STEP030 EXEC PGM=IDCAMS                                               00060006
+//SYSPRINT DD SYSOUT=*                                                  00070006
+//SYSOUT DD SYSOUT=*                                                    00080006
+//SYSIN DD *                                                            00090006
+   REPRO -                                                              00100006
+   INDATASET(TECN210.JCL.ASSMT02.SHARE.PS2)-                            00110012
+   OUTDATASET(TECN210.JCL.ASSMT02.SHARE.KSDS)                           00120012
+/*                                                                      00130006
+//        ELSE                                                          00140007
+//STEP040 EXEC PGM=IDCAMS                                               00150006
+//SYSPRINT DD SYSOUT=*                                                  00160006
+//SYSIN DD *                                                            00170006
+  PRINT-                                                                00180010
+'DATASET IS EMPTY'-                                                    00180112
+  CHAR                                                                  00181009
+/*                                                                      00190006
+//        ENDIF                                                         00200013
+//STEP050 EXEC PGM=IDCAMS                                               00210013
+//SYSPRINT DD SYSOUT=*                                                  00220013
+//SYSOUT DD SYSOUT=*                                                    00230013
+//SYSIN DD *                                                            00240013
+   DEFINE AIX(           -                                              00250013
+    NAME(TECN210.JCL.ASSMT02.SHARE.AIX) -                               00260013
+    RELATE(TECN210.JCL.ASSMT02.SHARE.KSDS)-                             00270013
+    KEYS(19,22) -                                                       00280013
+    TRACKS(1,1) -                                                       00290013
+    RECSZ(80,80)-                                                       00300013
+    VOLUME(ZAPRD4)-                                                     00310013
+    FREESPACE(10,10)-                                                   00320013
+    CISZ(4096))                                                         00330013
+/*                                                                      00340013
+//STEP060 EXEC PGM=IDCAMS                                               00350013
+//SYSPRINT DD SYSOUT=*                                                  00360013
+//SYSIN DD *                                                            00370013
+   BLDINDEX -                                                           00380013
+   INDATASET(TECN210.JCL.ASSMT02.SHARE.KSDS)-                           00390013
+   OUTDATASET(TECN210.JCL.ASSMT02.SHARE.AIX)                            00400013
+/*                                                                      00410013
+//STEP070 EXEC PGM=IDCAMS                                               00420013
+//SYSPRINT DD SYSOUT=*                                                  00430013
+//SYSIN DD *                                                            00440013
+   DEFINE PATH(NAME(TECN210.JCL.ASSMT02.SHARE.PATH) -                   00450013
+    PATHENTRY(TECN210.JCL.ASSMT02.SHARE.KSDS))                          00460013
+/*                                                                      00470013

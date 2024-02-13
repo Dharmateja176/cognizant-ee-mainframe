@@ -1,5 +1,7 @@
-//KSDSCRT  PROC                                       
-//STEP1    EXEC PGM=IDCAMS                            
-//SYSPRINT DD SYSOUT=*                                
-//SYSOUT   DD SYSOUT=*                                
-//SYSIN    DD DSN=TECN258.JCL.MYPROC(MYCTL01),DISP=SHR
+//KSDSCRT PROC                                                          00010001
+//STEP2 EXEC PGM=IDCAMS                                                 00020005
+//SYSPRINT DD SYSOUT=*                                                  00021010
+//SYSOUT DD SYSOUT=*                                                    00030004
+//SYSDUMP DD SYSOUT=*                                                   00031010
+//SYSIN DD DSN=TECN210.JCL.MYPROC(MYCTLO1),DISP=SHR                     00040009
+//       PEND                                                           00050011
