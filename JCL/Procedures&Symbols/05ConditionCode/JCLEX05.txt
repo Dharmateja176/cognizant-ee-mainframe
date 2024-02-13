@@ -1,4 +1,4 @@
-//USER_ID  JOB (USER_ID),'DHARMA',NOTIFY=&SYSUID
+//USER_ID  JOB NOTIFY=&SYSUID
 //STEP1    EXEC PGM=IDCAMS
 //SYSPRINT  DD   SYSOUT=*                                              
 //SYSIN     DD   *                                                     
