@@ -93,7 +93,5 @@
 //SYSIN DD *                                                            00640030
    SORT FIELDS=COPY                                                     00650030
    OUTREC FINDREP=(INOUT=(C'A',C'@'),STARTPOS=23,ENDPOS=42)             00660030
-                         
-                         
 /*
 //*
