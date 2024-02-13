@@ -1,0 +1,111 @@
+//USER_IDA JOB NOTIFY=&SYSUID,RESTART=STEP060   
+
+
+
+
+//* DEFINING A ESDS CLUSTER                                             
+//STEP010  EXEC PGM=IDCAMS                                              
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+  DELETE USER_ID.MISC.ESDS PURGE                                        
+  IF LASTCC>0 THEN SET MAXCC=0                                          
+  DEFINE CLUSTER(NAME(USER_ID.MISC.ESDS) -                              
+         CISZ(4096) -                                                   
+         VOLUMES(ZAPRD6) -                                              
+         RECORDSIZE(80,80) -                                            
+         TRACKS(5,5) -                                                  
+         NONINDEXED) -                                                  
+  DATA(NAME(USER_ID.MISC.ESDS.DATA))                                    
+/*                                                                      
+//* FIRST TWO LINES -> PREDELETE THE CLUSTER, USE IF YOU WISH           
+//*  
+
+
+
+
+//* LOADING DATA INTO ESDS                                              
+//* YOU'LL MOSTLY LOAD AFTER CHECKING IF THE IP FILE IS EMPTY OR NOT    
+//STEP020  EXEC PGM=IDCAMS                                              
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+  REPRO -                                                               
+  INDATASET(USER_ID.MISC.RDUPADD.PS5) -                                 
+  OUTDATASET(USER_ID.MISC.ESDS)                                         
+/*                                                                      
+//* USE INFILE/OUTFILE - IF YOU DEFINE DD STMTS FOR DATASETS            
+//* USE IDS/ODS INSTEAD OF INDAT..OUTDA... (SHORTER FORMS)              
+//*    
+
+
+
+
+
+
+//* PRINTING ESDS DATA                                                  
+//STEP030 EXEC PGM=IDCAMS                                               
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+  PRINT -                                                               
+  INDATASET(USER_ID.MISC.ESDS) -                                        
+  CHAR                                                                  
+/*                                                                      
+//* USE INFILE IF YOU DECLARE DD STATEMENT FOR DATASET                  
+//* CAN USE IDS INSTEAD OF INDATASET, CHAR IS MUST                      
+//* FOR ESDS YOU CAN USE FROMADDRESS, TOADDRESS TO FILTER               
+//*      
+
+
+
+
+
+//* DEFINING AN ALTERNATE INDEX FOR ESDS                                
+//STEP040  EXEC PGM=IDCAMS                                              
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+  DEFINE AIX(NAME(USER_ID.MISC.ESDS.AIX) -                              
+         RELATE(USER_ID.MISC.ESDS) -                                    
+         CISZ(4096) -                                                   
+         VOLUMES(ZAPRD6) -                                              
+         RECORDSIZE(80,80) -                                            
+         KEYS(2,0) -                                                    
+         UNIQUEKEY -                                                    
+         TRACKS(5,5))                                                   
+/*                                                                      
+//* YOU CANNOT RELATE TO VSAM DS, IF IT IS REUSABLE                     
+//*    
+
+
+
+
+
+
+//* BUILDING THE INDEX                                                  
+//STEP050  EXEC PGM=IDCAMS                                              
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+  BLDINDEX -                                                            
+  IDS(USER_ID.MISC.ESDS) -                                              
+  ODS(USER_ID.MISC.ESDS.AIX)                                            
+/*                                                                      
+//* IDS,ODS -> INDATASET AND OUTDATASET                                 
+//*      
+
+
+
+
+
+
+
+//*  DEFINING THE PATH                                                  
+//STEP060  EXEC PGM=IDCAMS                                              
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+  DEFINE PATH(NAME(USER_ID.MISC.ESDSAIX) -                              
+         PATHENTRY(USER_ID.MISC.ESDS.AIX))                              
+/*                                                                      

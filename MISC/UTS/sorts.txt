@@ -1,103 +1,119 @@
-//TECN258A JOB NOTIFY=&SYSUID,RESTART=STEP070                           00010000
-//* SOME SORTS                                                          00020000
-//STEP010  EXEC PGM=SORT                                                00030000
-//SYSPRINT DD SYSOUT=*                                                  00040000
-//SYSOUT   DD SYSOUT=*                                                  00050000
-//SORTIN   DD DSN=TECN258.DHARMA.MISC.PS1,DISP=SHR                      00060000
-//SORTOF01 DD DSN=TECN258.DHARMA.MISC.MALE.PS3,                         00070000
-//            DISP=(NEW,CATLG,DELETE),                                  00080000
-//            SPACE=(TRK,(5,5)),                                        00090000
-//            VOL=SER=ZAPRD6,                                           00100000
-//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800,DSORG=PS)              00110000
-//SORTOF02 DD DSN=TECN258.DHARMA.MISC.FEMALE.PS3,                       00120000
-//            DISP=(NEW,CATLG,DELETE),                                  00130000
-//            SPACE=(TRK,(5,5)),                                        00140000
-//            VOL=SER=ZAPRD6,                                           00150000
-//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800,DSORG=PS)              00160000
-//SYSIN    DD *                                                         00170000
-  SORT FIELDS=COPY                                                      00180000
-  OUTFIL FILES=01,INCLUDE(10,1,CH,EQ,C'M')                              00190000
-  OUTFIL FILES=02,INCLUDE(10,1,CH,EQ,C'F')                              00200000
-/*                                                                      00210000
-//*  YOU CAN ALSO USE A COLUMN TO SORT IN SORT FIELDS                   00211000
-//*                                                                     00220000
-//* MERGING FILES                                                       00221000
-//STEP020  EXEC PGM=SORT                                                00230000
-//SYSPRINT DD SYSOUT=*                                                  00240000
-//SYSOUT   DD SYSOUT=*                                                  00250000
-//SORTIN01 DD DSN=TECN258.DHARMA.MISC.MALE.PS3,DISP=SHR                 00260000
-//SORTIN02 DD DSN=TECN258.DHARMA.MISC.FEMALE.PS3,DISP=SHR               00270000
-//SORTOUT  DD DSN=TECN258.DHARMA.MISC.MERGED.PS3,                       00280000
-//            DISP=(NEW,CATLG,DELETE),                                  00290000
-//            VOL=SER=ZAPRD6,                                           00300000
-//            SPACE=(TRK,(5,5)),                                        00310000
-//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800)                       00320000
-//SYSIN    DD *                                                         00330000
-  MERGE FIELDS=(1,2,ZD,A)                                               00340000
-/*                                                                      00350000
-//*                                                                     00360000
-//* OMIT AND INCLUDE                                                    00370000
-//STEP030  EXEC PGM=SORT                                                00380000
-//SYSPRINT DD SYSOUT=*                                                  00390000
-//SYSOUT   DD SYSOUT=*                                                  00400000
-//SORTIN   DD DSN=TECN258.DHARMA.MISC.MERGED.PS3,DISP=SHR               00410000
-//SORTOUT  DD DSN=TECN258.DHARMA.MISC.OANDI.PS4,                        00420000
-//            DISP=(NEW,CATLG,DELETE),                                  00421000
-//            VOL=SER=ZAPRD6,                                           00422000
-//            SPACE=(TRK,(5,5)),                                        00423000
-//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800)                       00424000
-//SYSIN    DD *                                                         00430000
-  SORT FIELDS=COPY                                                      00440000
-  OMIT COND=(1,2,ZD,LT,15)                                              00450000
-  INCLUDE COND=(10,1,CH,EQ,C'M')                                        00460000
-/*                                                                      00470000
-//* YOU CAN USE AND, OR INSIDE AN INCLUDE OR OMIT                       00480000
-//* TO DO BOTH OPS IN SINGLE STMT                                       00490000
-//*                                                                     00500000
-//* REMOVE DUPLICATES                                                   00501000
-//STEP040 EXEC PGM=SORT                                                 00510000
-//SYSPRINT DD SYSOUT=*                                                  00520000
-//SYSOUT   DD SYSOUT=*                                                  00530000
-//SORTIN   DD DSN=TECN258.DHARMA.MISC.PS1,DISP=SHR                      00540000
-//SORTOUT  DD DSN=TECN258.DHARMA.MISC.REMDUPS.PS5,                      00550000
-//            DISP=(NEW,CATLG,DELETE),                                  00570000
-//            VOL=SER=ZAPRD6,                                           00580000
-//            SPACE=(TRK,(5,5)),                                        00590000
-//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800)                       00600000
-//SYSIN    DD *                                                         00610000
-  SORT FIELDS=(1,2,ZD,A)                                                00620000
-  SUM FIELDS=NONE                                                       00630000
-/*                                                                      00640000
-//*                                                                     00650000
-//*  REMOVE DUPLICATES WHILE ADDING A COLUMN                            00660000
-//STEP050  EXEC PGM=SORT                                                00670000
-//SYSPRINT DD SYSOUT=*                                                  00680000
-//SYSOUT   DD SYSOUT=*                                                  00690000
-//SORTIN   DD DSN=TECN258.DHARMA.MISC.PS1,DISP=SHR                      00710000
-//SORTOUT  DD DSN=TECN258.DHARMA.MISC.RDUPADD.PS5,                      00720000
-//            DISP=(NEW,CATLG,DELETE),                                  00730000
-//            VOL=SER=ZAPRD6,                                           00740000
-//            SPACE=(TRK,(5,5)),                                        00750000
-//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800)                       00760000
-//SYSIN    DD *                                                         00770000
-  SORT FIELDS=(1,2,ZD,A)                                                00780000
-  SUM FIELDS=(12,4,ZD)                                                  00790000
-/*                                                                      00800000
-//*                                                                     00810000
-//*  ADDING TO A DECIMAL VALUES **                                      00820000
-//STEP060 EXEC PGM=SORT                                                 00830000
-//SYSPRINT DD SYSOUT=*                                                  00840000
-//SYSOUT   DD SYSOUT=*                                                  00850000
-//SORTIN   DD DSN=TECN258.DHARMA.MISC.RDUPADD.PS5,DISP=SHR              00870000
-//SORTOUT  DD DSN=TECN258.DHARMA.MISC.DECIMADD.PS6,                     00880000
-//            DISP=(NEW,CATLG,DELETE),                                  00890000
-//            VOL=SER=ZAPRD6,                                           00900000
-//            SPACE=(TRK,(5,5)),                                        00910000
-//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800)                       00920000
-//SYSIN    DD *                                                         00930000
-  SORT FIELDS=COPY                                                      00940000
-  OUTREC OVERLAY=(27:17,7,UFF,ADD,+0100000,EDIT=(TTTT.TTT))             00950000
-/*                                                                      00960000
-//* HERE, ADDING 100 TO THE NUMBER, GIVE ZEROES ACC TO EDIT T'S         00970000
-//*                                                                     00980000
+Some sorts
 
+//SPLITTING FILE                                                    
+//STEP010  EXEC PGM=SORT                                                
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTIN   DD DSN=USER_ID.MISC.PS1,DISP=SHR                      
+//SORTOF01 DD DSN=DATASET_NAME,     
+//            DISP=SHR                     
+//SORTOF02 DD DSN=DATASET_NAME,   
+//            DISP=SHR                      
+//SYSIN    DD *                                                         
+  SORT FIELDS=COPY                                                      
+  OUTFIL FILES=01,INCLUDE(10,1,CH,EQ,C'M')                              
+  OUTFIL FILES=02,INCLUDE(10,1,CH,EQ,C'F')                              
+/*                                                                      
+//*  YOU CAN ALSO USE A COLUMN TO SORT IN SORT FIELDS                   
+//*      
+
+
+
+
+//* MERGING FILES                                                       
+//STEP020  EXEC PGM=SORT                                                
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTIN01 DD DSN=USER_ID.MISC.MALE.PS3,DISP=SHR                 
+//SORTIN02 DD DSN=USER_ID.MISC.FEMALE.PS3,DISP=SHR               
+//SORTOUT  DD DSN=USER_ID.MISC.MERGED.PS3,                       
+//            DISP=(NEW,CATLG,DELETE),                                  
+//            VOL=SER=ZAPRD6,                                           
+//            SPACE=(TRK,(5,5)),                                        
+//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800)                       
+//SYSIN    DD *                                                         
+  MERGE FIELDS=(1,2,ZD,A)                                               
+/*                                                                      
+//*  
+
+
+
+
+//* OMIT AND INCLUDE                                                    
+//STEP030  EXEC PGM=SORT                                                
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTIN   DD DSN=USER_ID.MISC.MERGED.PS3,DISP=SHR               
+//SORTOUT  DD DSN=USER_ID.MISC.OANDI.PS4,                        
+//            DISP=(NEW,CATLG,DELETE),                                  
+//            VOL=SER=ZAPRD6,                                           
+//            SPACE=(TRK,(5,5)),                                        
+//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800)                       
+//SYSIN    DD *                                                         
+  SORT FIELDS=COPY                                                      
+  OMIT COND=(1,2,ZD,LT,15)                                              
+  INCLUDE COND=(10,1,CH,EQ,C'M')                                        
+/*                                                                      
+//* YOU CAN USE AND, OR INSIDE AN INCLUDE OR OMIT                       
+//* TO DO BOTH OPS IN SINGLE STMT                                       
+//*     
+
+
+
+
+
+//* REMOVE DUPLICATES                                                   
+//STEP040 EXEC PGM=SORT                                                 
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTIN   DD DSN=USER_ID.MISC.PS1,DISP=SHR                      
+//SORTOUT  DD DSN=USER_ID.MISC.REMDUPS.PS5,                      
+//            DISP=(NEW,CATLG,DELETE),                                  
+//            VOL=SER=ZAPRD6,                                           
+//            SPACE=(TRK,(5,5)),                                        
+//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800)                       
+//SYSIN    DD *                                                         
+  SORT FIELDS=(1,2,ZD,A)                                                
+  SUM FIELDS=NONE                                                       
+/*                                                                      
+//*   
+
+
+
+
+
+//*  REMOVE DUPLICATES WHILE ADDING A COLUMN                            
+//STEP050  EXEC PGM=SORT                                                
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTIN   DD DSN=USER_ID.MISC.PS1,DISP=SHR                      
+//SORTOUT  DD DSN=USER_ID.MISC.RDUPADD.PS5,                      
+//            DISP=(NEW,CATLG,DELETE),                                  
+//            VOL=SER=ZAPRD6,                                           
+//            SPACE=(TRK,(5,5)),                                        
+//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800)                       
+//SYSIN    DD *                                                         
+  SORT FIELDS=(1,2,ZD,A)                                                
+  SUM FIELDS=(12,4,ZD)                                                  
+/*                                                                      
+//*     
+
+
+
+
+
+//*  ADDING TO A DECIMAL VALUES **                                      
+//STEP060 EXEC PGM=SORT                                                 
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SORTIN   DD DSN=USER_ID.MISC.RDUPADD.PS5,DISP=SHR              
+//SORTOUT  DD DSN=USER_ID.MISC.DECIMADD.PS6,                     
+//            DISP=(NEW,CATLG,DELETE),                                  
+//            VOL=SER=ZAPRD6,                                           
+//            SPACE=(TRK,(5,5)),                                        
+//            DCB=(LRECL=80,RECFM=FB,BLKSIZE=800)                       
+//SYSIN    DD *                                                         
+  SORT FIELDS=COPY                                                      
+  OUTREC OVERLAY=(27:17,7,UFF,ADD,+0100000,EDIT=(TTTT.TTT))             
+/*                                                                      
+//* HERE, ADDING 100 TO THE NUMBER, GIVE ZEROES ACC TO EDIT T'S         

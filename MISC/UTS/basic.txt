@@ -1,65 +1,82 @@
-//TECN258A JOB NOTIFY=&SYSUID                                           00010000
-//* CREATING A PROC FOR PREDELETE AND PREALLOC                          00011000
-//ACRTE    PROC                                                         00012000
-//* HOW TO PREDELETE                                                    00012100
-//STEP010  EXEC PGM=IEFBR14                                             00013000
-//DD1      DD DSN=&DSNAME..PS2,                                         00014000
-//            DISP=(MOD,DELETE,DELETE),                                 00015000
-//            SPACE=(TRK,0)                                             00016000
-//* ALLOCATION OF A DS                                                  00016100
-//STEP020  EXEC PGM=IEFBR14                                             00017000
-//DD1      DD DSN=&DSNAME..PS2,                                         00018000
-//            DISP=(NEW,CATLG,DELETE),                                  00019000
-//            SPACE=(TRK,(5,5)),                                        00019100
-//            VOL=SER=ZAPRD6,                                           00019200
-//            DCB=(LRECL=80,BLKSIZE=800,RECFM=FB,DSORG=PS)              00019300
-//         PEND                                                         00019400
-//*    PROCEDURE ENDS                                                   00019500
-//STEP030  EXEC ACRTE,DSNAME=TECN258.DHARMA.MISC                        00019600
-//*  CHECK A FILE IF IT'S EMPTY OR NOT                                  00019700
-//STEP040  EXEC PGM=IDCAMS                                              00020000
-//SYSPRINT DD SYSOUT=*                                                  00030000
-//SYSOUT   DD SYSOUT=*                                                  00040000
-//SYSIN    DD *                                                         00050000
-  PRINT -                                                               00060000
-  IDS(TECN258.DHARMA.MISC.PS1) -                                        00070000
-  COUNT(1) -                                                            00080000
-  CHAR                                                                  00090000
-/*                                                                      00100000
-//* RETURNS 4 IF IT'S EMPTY ELSE 0                                      00101000
-//* IFSTEP                                                              00110000
-//IFSTEP   IF STEP040.RC=4 THEN                                         00120000
-//* PRINTING INTO SPOOL                                                 00121001
-//STEP050  EXEC PGM=IDCAMS                                              00130001
-//SYSPRINT DD SYSOUT=*                                                  00140000
-//SYSOUT   DD SYSOUT=*                                                  00150000
-//PRT      DD *                                                         00151001
-  'DATASET IS EMPTY'                                                    00152001
-/*                                                                      00153001
-//SYSIN    DD *                                                         00160001
-  PRINT INFILE(PRT) CHAR                                                00170001
-/*                                                                      00200001
-//* OR USING IEBGENER                                                   00201001
-//STEP006 EXEC PGM=IEBGENER                                             00202001
-//SYSPRINT DD SYSOUT=*                                                  00203001
-//SYSOUT DD SYSOUT=*                                                    00204001
-//SYSUT1 DD *                                                           00205001
-  'DATASET IS NOT DELETED'                                              00206001
-//SYSUT2 DD SYSOUT=*                                                    00207001
-//SYSIN DD DUMMY                                                        00208001
-//*                                                                     00208101
-//*                                                                     00208201
-//*                                                                     00208301
-//* PRITNING OUTPUT INTO A FILE                                         00209001
-//STEP007  EXEC PGM=IDCAMS                                              00209101
-//SYSPRINT DD SYSOUT=*                                                  00209201
-//SYSOUT   DD SYSOUT=*                                                  00209301
-//PRT      DD *                                                         00209401
-DATASET IS EMPTY                                                        00209501
-/*                                                                      00209601
-//SYSIN    DD *                                                         00209701
-  REPRO -                                                               00209801
-  INFILE(PRT) -                                                         00209901
-  OUTDATASET(TECN258.DHARMA.MISC.PS2)                                   00210001
-/*                                                                      00211001
-//         ENDIF                                                        00220000
+
+//* CREATING A PROC FOR PREDELETE AND PREALLOC                          
+//ACRTE    PROC      
+
+
+//* HOW TO PREDELETE                                                    
+//STEP010  EXEC PGM=IEFBR14                                             
+//DD1      DD DSN=&DSNAME..PS2,                                         
+//            DISP=(MOD,DELETE,DELETE),                                 
+//            SPACE=(TRK,(0))    
+
+
+
+//* ALLOCATION OF A DS                                                  
+//STEP020  EXEC PGM=IEFBR14                                             
+//DD1      DD DSN=&DSNAME..PS2,                                         
+//            DISP=(NEW,CATLG,DELETE),                                  
+//            SPACE=(TRK,(5,5)),                                        
+//            VOL=SER=ZAPRD6,                                           
+//            DCB=(LRECL=80,BLKSIZE=800,RECFM=FB,DSORG=PS)              
+//         PEND                                                         
+//*    PROCEDURE ENDS    
+
+
+                      
+//*  CHECK A FILE IF IT'S EMPTY OR NOT                                  
+//STEP040  EXEC PGM=IDCAMS                                              
+//SYSPRINT DD SYSOUT=*                                                  
+//SYSOUT   DD SYSOUT=*                                                  
+//SYSIN    DD *                                                         
+  PRINT -                                                               
+  IDS(USER_ID.MISC.PS1) -                                        
+  COUNT(1) -                                                            
+  CHAR                                                                  
+/*                                                                      
+//* RETURNS 4 IF IT'S EMPTY ELSE 0      
+
+
+
+
+//* IFSTEP                                                              
+//IFSTEP   IF STEP040.RC=4 THEN     
+//* PRINTING INTO SPOOL             
+//STEP050  EXEC PGM=IDCAMS          
+//SYSPRINT DD SYSOUT=*              
+//SYSOUT   DD SYSOUT=*              
+//PRT      DD *                     
+  'DATASET IS EMPTY'                
+/*                                  
+//SYSIN    DD *                     
+  PRINT INFILE(PRT) CHAR            
+/*      
+//         ENDIF  
+
+
+//* OR USING IEBGENER               
+//STEP006 EXEC PGM=IEBGENER         
+//SYSPRINT DD SYSOUT=*              
+//SYSOUT DD SYSOUT=*                
+//SYSUT1 DD *                       
+  'DATASET IS NOT DELETED'          
+//SYSUT2 DD SYSOUT=*                
+//SYSIN DD DUMMY                                                                                   
+
+
+
+
+
+                                    
+//* PRITNING OUTPUT INTO A FILE     
+//STEP007  EXEC PGM=IDCAMS          
+//SYSPRINT DD SYSOUT=*              
+//SYSOUT   DD SYSOUT=*              
+//PRT      DD *                                                         
+DATASET IS EMPTY                                                        
+/*                                                                      
+//SYSIN    DD *                                                         
+  REPRO -                                                               
+  INFILE(PRT) -                                                         
+  OUTDATASET(USER_ID.MISC.PS2)                                   
+/*                                                                      
+                                                      
