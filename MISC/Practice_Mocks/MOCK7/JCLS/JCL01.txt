@@ -1,0 +1,4 @@
+//USERIDS  JOB NOTIFY=&SYSUID                                           00010000
+//   JCLLIB ORDER=USERID.LAB.FINAL                                      00020000
+//STEP001 EXEC PA12C351                                                 00030000
+

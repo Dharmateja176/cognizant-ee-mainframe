@@ -1,0 +1,3 @@
+  SORT FIELDS=(1,4,ZD,A)
+  OMIT COND=(1,4,ZD,GT,2000)
+

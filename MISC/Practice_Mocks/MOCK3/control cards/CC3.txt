@@ -1,0 +1,3 @@
+  SORT FIELDS=(1,5,CH,A)                                                00010003
+  SUM FIELDS=(7,3,ZD)                                                   00020003
+

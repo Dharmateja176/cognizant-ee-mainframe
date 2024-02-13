@@ -1,0 +1,64 @@
+//USER_IDN  JOB NOTIFY=&SYSUID                                          00010000
+//STEP005 EXEC PGM=IEFBR14                                              00011000
+//DD1 DD DSN=USER_ID.L1E.PROD.PS6,                                      00012000
+//    DISP=(MOD,DELETE,DELETE),                                         00013000
+//    SPACE=(TRK,(0))                                                   00014000
+//STEP010 EXEC PGM=SORT                                                 00020000
+//SYSPRINT DD SYSOUT=*                                                  00030000
+//SYSOUT DD SYSOUT=*                                                    00040000
+//SORTIN DD DSN=USER_ID.L1E.PROD.PS1,DISP=SHR                           00050000
+//SORTOUT DD DSN=USER_ID.L1E.PROD.PS6,                                  00060000
+//        DISP=(NEW,CATLG,DELETE),                                      00070000
+//        SPACE=(TRK,(1,1)),                                            00080000
+//        DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                          00090000
+//        VOL=SER=ZAPRD7                                                00100000
+//SYSIN DD *                                                            00110000
+     SORT FIELDS=(1,5,CH,A)                                             00120000
+     SUM FIELDS=NONE                                                    00130000
+/*                                                                      00140000
+//STEP020 EXEC PGM=IDCAMS                                               00150001
+//SYSPRINT DD SYSOUT=*                                                  00160001
+//SYSOUT DD SYSOUT=*                                                    00170001
+//SYSIN DD *                                                            00180001
+    DELETE USER_ID.L1E.PROD.KSDS PURGE                                  00190001
+    IF LASTCC>0 THEN SET MAXCC=0                                        00200001
+    DEFINE CLUSTER(NAME(USER_ID.L1E.PROD.KSDS) -                        00210001
+    CISZ(4096) -                                                        00220001
+    FREESPACE(10,10) -                                                  00230001
+    TRACKS(1,1) -                                                       00240001
+    RECORDSIZE(80,80) -                                                 00250001
+    KEYS(5,0) -                                                         00260001
+    INDEXED -                                                           00270001
+    VOLUMES(ZAPRD7))                                                    00280001
+/*                                                                      00290001
+//STEP030 EXEC PGM=IDCAMS                                               00300001
+//SYSPRINT DD SYSOUT=*                                                  00310001
+//SYSOUT DD SYSOUT=*                                                    00320001
+//SYSIN DD *                                                            00330001
+   REPRO IDS(USER_ID.L1E.PROD.PS6) -                                    00340001
+   ODS(USER_ID.L1E.PROD.KSDS)                                           00350001
+/*                                                                      00360001
+//STEP040 EXEC PGM=IDCAMS                                               00370001
+//SYSPRINT DD SYSOUT=*                                                  00380001
+//SYSOUT DD SYSOUT=*                                                    00390001
+//SYSIN DD *                                                            00400001
+   DEFINE AIX(NAME(USER_ID.L1E.PROD.KSDS.AIX) -                         00410001
+   RELATE(USER_ID.L1E.PROD.KSDS) -                                      00420001
+   RECORDSIZE(80,80) -                                                  00430001
+   CISZ(4096) -                                                         00440001
+   FREESPACE(10,10) -                                                   00450001
+   TRACKS(1,1) -                                                        00460001
+   VOLUMES(ZAPRD7) -                                                    00470001
+   NONUNIQUEKEY -                                                       00480001
+   KEYS(20,6))                                                          00490001
+/*                                                                      00500001
+//STEP050 EXEC PGM=IDCAMS                                               00510001
+//SYSPRINT DD SYSOUT=*                                                  00520001
+//SYSOUT DD SYSOUT=*                                                    00530001
+//SYSIN DD *                                                            00540001
+   BLDINDEX IDS(USER_ID.L1E.PROD.KSDS) -                                00550001
+   ODS(USER_ID.L1E.PROD.KSDS.AIX)                                       00560001
+   DEFINE PATH(NAME(USER_ID.L1E.PROD.KSDS.PATH) -                       00570001
+   PATHENTRY(USER_ID.L1E.PROD.KSDS.AIX))                                00580001
+/*                                                                      00590001
+

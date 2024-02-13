@@ -1,0 +1,2 @@
+ PRINT IDS(USERID.LIG.AGTCMN.PS5) COUNT(1)                              00010000
+

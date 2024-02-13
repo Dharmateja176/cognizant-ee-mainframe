@@ -1,0 +1,6 @@
+  SORT FIELDS=COPY                                                      00010000
+  OUTFIL FILES=01,INCLUDE=(11,8,CH,EQ,C'ACTIVE'),                       00020003
+  BUILD=(SEQNUM,2,ZD,START=1,1X,1,36,80:X)                              00021003
+  OUTFIL FILES=02,INCLUDE=(11,8,CH,EQ,C'INACTIVE'),                     00030003
+  BUILD=(SEQNUM,2,ZD,START=1,1X,1,36,80:X)                              00040003
+

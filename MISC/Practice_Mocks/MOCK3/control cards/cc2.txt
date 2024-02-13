@@ -1,0 +1,2 @@
+  SORT FIELDS=COPY,SKIPREC=2,STOPAFT=12                                 00010000
+

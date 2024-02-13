@@ -1,0 +1,106 @@
+//PA12C351 PROC                                                         00010001
+//*USERIDV  JOB NOTIFY=&SYSUID                                          00020001
+//STEP001 EXEC PGM=IEFBR14                                              00030000
+//DD1 DD DSN=USERID.L2C.CRSE.DT2,                                       00040000
+//    DISP=(MOD,DELETE,DELETE),                                         00050000
+//    SPACE=(TRK,(0))                                                   00060000
+//DD2 DD DSN=USERID.L2C.CRSE.DT3,                                       00070000
+//    DISP=(MOD,DELETE,DELETE),                                         00080000
+//    SPACE=(TRK,(0))                                                   00090000
+//DD3 DD DSN=USERID.L2C.CRSE.DT4,                                       00100000
+//    DISP=(MOD,DELETE,DELETE),                                         00110000
+//    SPACE=(TRK,(0))                                                   00120000
+//DD4 DD DSN=USERID.L2C.CRSE.DT5,                                       00130000
+//    DISP=(MOD,DELETE,DELETE),                                         00140000
+//    SPACE=(TRK,(0))                                                   00150000
+//DD5 DD DSN=USERID.L2C.CRSE.DT6,                                       00160000
+//    DISP=(MOD,DELETE,DELETE),                                         00170000
+//    SPACE=(TRK,(0))                                                   00180000
+//DD6 DD DSN=USERID.CLIENT.SRTOP,                                       00190000
+//    DISP=(MOD,DELETE,DELETE),                                         00200000
+//    SPACE=(TRK,(0))                                                   00210000
+//STEP002 EXEC PGM=SORT                                                 00220000
+//SYSPRINT DD SYSOUT=*                                                  00230000
+//SYSOUT DD SYSOUT=*                                                    00240000
+//SORTIN DD DSN=USERID.L2C.CRSE.DT1,DISP=SHR                            00250000
+//SORTOUT DD DSN=USERID.L2C.CRSE.DT2,                                   00260000
+//        DISP=(NEW,CATLG,DELETE),                                      00270000
+//        SPACE=(TRK,(1,1)),                                            00280000
+//        DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                          00290000
+//        VOL=SER=VPWRKB                                                00300000
+//SYSIN DD *                                                            00310000
+   SORT FIELDS=(1,5,CH,A),EQUALS                                        00320000
+   SUM FIELDS=NONE                                                      00330000
+/*                                                                      00340000
+//STEP003 EXEC PGM=IDCAMS                                               00350000
+//SYSPRINT DD SYSOUT=*                                                  00360000
+//SYSOUT DD SYSOUT=*                                                    00370000
+//SYSIN DD *                                                            00380000
+    PRINT IDS(USERID.L2C.CRSE.DT2) COUNT(1)                             00390000
+/*                                                                      00400000
+//IFSTP1  IF STEP003.RC=0 THEN                                          00410000
+//STEP004 EXEC PGM=SORT                                                 00420000
+//SYSPRINT DD SYSOUT=*                                                  00430000
+//SYSOUT DD SYSOUT=*                                                    00440000
+//SORTIN DD DSN=USERID.L2C.CRSE.DT2,DISP=SHR                            00450000
+//SORTOUT DD DSN=USERID.CLIENT.SRTOP,                                   00460000
+//        DISP=(NEW,CATLG,DELETE),                                      00470000
+//        SPACE=(TRK,(1,1)),                                            00480000
+//        DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                          00490000
+//        VOL=SER=VPWRKB                                                00500000
+//SYSIN DD *                                                            00510000
+    SORT FIELDS=(1,5,CH,D)                                              00520003
+    OUTFIL FNAMES=SORTOUT,ENDREC=4                                      00530000
+/*                                                                      00540000
+// ELSE                                                                 00541000
+//STEP005 EXEC PGM=SORT                                                 00542000
+//SYSPRINT DD SYSOUT=*                                                  00543000
+//SYSOUT DD SYSOUT=*                                                    00544000
+//SORTIN DD DSN=USERID.L2C.CRSE.DT2,DISP=SHR                            00545000
+//SORTOUT DD DSN=USERID.L2C.CRSE.DT3,                                   00546000
+//        DISP=(NEW,CATLG,DELETE),                                      00547000
+//        SPACE=(TRK,(1,1)),                                            00548000
+//        DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                          00549000
+//        VOL=SER=VPWRKB                                                00549100
+//SYSIN DD *                                                            00549200
+   SORT FIELDS=COPY                                                     00549300
+/*                                                                      00549400
+// ENDIF                                                                00550000
+//STEP006 EXEC PGM=SORT                                                 00560000
+//SYSPRINT DD SYSOUT=*                                                  00570000
+//SYSOUT DD SYSOUT=*                                                    00580000
+//SORTIN DD DSN=USERID.L2C.CRSE.DT2,DISP=SHR                            00590000
+//SORTOF01 DD DSN=USERID.L2C.CRSE.DT4,                                  00600000
+//        DISP=(NEW,CATLG,DELETE),                                      00610000
+//        SPACE=(TRK,(1,1)),                                            00620000
+//        DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                          00630000
+//        VOL=SER=VPWRKB                                                00640000
+//SORTOF02 DD DSN=USERID.L2C.CRSE.DT5,                                  00650000
+//         DISP=(NEW,CATLG,DELETE),                                     00660000
+//         SPACE=(TRK,(1,1)),                                           00670000
+//         DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                         00680000
+//         VOL=SER=VPWRKB                                               00690000
+//SYSIN DD *                                                            00700000
+    SORT FIELDS=COPY                                                    00710000
+    OUTFIL FILES=01,INCLUDE(28,7,CH,EQ,C'ONLINE')                       00720000
+    OUTFIL FILES=02,INCLUDE(28,7,CH,EQ,C'OFFLINE')                      00730000
+/*                                                                      00740000
+//STEP007 EXEC PGM=SORT                                                 00750000
+//SYSPRINT DD SYSOUT=*                                                  00760000
+//SYSOUT DD SYSOUT=*                                                    00770000
+//SORTIN DD DSN=USERID.L2C.CRSE.DT2,DISP=SHR                            00780000
+//SORTOUT DD DSN=USERID.L2C.CRSE.DT6,                                   00790000
+//         DISP=(NEW,CATLG,DELETE),                                     00800000
+//         SPACE=(TRK,(1,1)),                                           00810000
+//         DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                         00820000
+//         VOL=SER=VPWRKB                                               00830000
+//SYSIN DD *                                                            00840000
+   SORT FIELDS=COPY                                                     00850000
+   OUTREC IFTHEN=(WHEN=(28,7,CH,EQ,C'ONLINE'),                          00860000
+   BUILD=(1,26,1X,36,3,ZD,MUL,+2,1X,40,3,1X,                            00870000
+   (36,3,ZD,MUL,+2),ADD,40,3,ZD,TO=ZD,LENGTH=3)),                       00880001
+   IFTHEN=(WHEN=(28,7,CH,EQ,C'OFFLINE'),                                00881001
+   BUILD=(1,26,1X,40:36,3,2X,40,3,1X,36,3,ZD,ADD,                       00882001
+   40,3,ZD,TO=ZD,LENGTH=3))                                             00883001
+/*                                                                      00890000
+

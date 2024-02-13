@@ -1,0 +1,10 @@
+  SORT FIELDS=COPY                                                      00010000
+  OUTREC IFTHEN=(WHEN=(20,9,CH,EQ,C'LIFE'),                             00020000
+  BUILD=(C'LP-',1,36,80:X)),                                            00030000
+  IFTHEN=(WHEN=(20,9,CH,EQ,C'MEDICAL'),                                 00040000
+  BUILD=(C'MP-',1,36,80:X)),                                            00050000
+  IFTHEN=(WHEN=(20,9,CH,EQ,C'TERM'),                                    00060000
+  BUILD=(C'TP-',1,36,80:X)),                                            00070000
+  IFTHEN=(WHEN=(20,9,CH,EQ,C'CASUALITY',OR,20,9,CH,EQ,C'ANNUITY'),      00080001
+  BUILD=(C'XX-',1,36,80:X))                                             00090000
+

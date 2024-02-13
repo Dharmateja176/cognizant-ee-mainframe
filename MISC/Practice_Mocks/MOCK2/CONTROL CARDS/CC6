@@ -1,0 +1,4 @@
+   REPRO -
+   IDS(USER_ID.LO.POLICY.PS2) -
+   OUTFILE(DD1)
+

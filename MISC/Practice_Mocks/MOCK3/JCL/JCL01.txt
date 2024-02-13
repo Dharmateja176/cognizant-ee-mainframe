@@ -1,0 +1,98 @@
+//USERID JOB 'SOORAJ',MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID          00010000
+//STEP005 EXEC PGM=IEFBR14                                              00020000
+//DD1 DD DSN=USERID.LIG.AGTCMN.PS2,                                     00030000
+//    DISP=(MOD,DELETE,DELETE),                                         00040000
+//    SPACE=(TRK,(0))                                                   00050000
+//DD2 DD DSN=USERID.LIG.AGTCMN.ACTIVE.PS3,                              00060000
+//    DISP=(MOD,DELETE,DELETE),                                         00070000
+//    SPACE=(TRK,(0))                                                   00080000
+//DD3 DD DSN=USERID.LIG.AGTCMN.INACTIVE.PS4,                            00090000
+//    DISP=(MOD,DELETE,DELETE),                                         00100000
+//    SPACE=(TRK,(0))                                                   00110000
+//DD4 DD DSN=USERID.LIG.AGTCMN.PS5,                                     00120000
+//    DISP=(MOD,DELETE,DELETE),                                         00130000
+//    SPACE=(TRK,(0))                                                   00140000
+//DD5 DD DSN=USERID.LIG.AGTCMN.PS6,                                     00150000
+//    DISP=(MOD,DELETE,DELETE),                                         00160000
+//    SPACE=(TRK,(0))                                                   00170000
+//DD6 DD DSN=USERID.LIG.AGTCMN.PS7,                                     00180000
+//    DISP=(MOD,DELETE,DELETE),                                         00190000
+//    SPACE=(TRK,(0))                                                   00200000
+//DD7 DD DSN=USERID.LIG.AGTCMN.PS8,                                     00201003
+//    DISP=(MOD,DELETE,DELETE),                                         00202003
+//    SPACE=(TRK,(0))                                                   00203003
+//STEP010 EXEC PGM=SORT                                                 00210000
+//SYSPRINT DD SYSOUT=*                                                  00220000
+//SYSOUT DD SYSOUT=*                                                    00230000
+//SORTIN DD DSN=USERID.LIG.AGTCMN.PS1,DISP=SHR                          00240000
+//SORTOUT DD DSN=USERID.LIG.AGTCMN.PS2,                                 00250000
+//        DISP=(NEW,CATLG,DELETE),                                      00260000
+//        DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                          00270000
+//        SPACE=(TRK,(1,1)),                                            00280000
+//        VOL=SER=VPWRKB                                                00290000
+//SYSIN DD DSN=USERID.LIG.AGENT.CC.PDS(CA11G351),DISP=SHR               00300000
+//STEP020 EXEC PGM=SORT                                                 00310000
+//SYSPRINT DD SYSOUT=*                                                  00320000
+//SYSOUT DD SYSOUT=*                                                    00330000
+//SORTIN DD DSN=USERID.LIG.AGTCMN.PS2,DISP=SHR                          00340000
+//SORTOUT DD DSN=USERID.LIG.AGTCMN.PS2,DISP=SHR                         00350000
+//SYSIN DD DSN=USERID.LIG.AGENT.CC.PDS(CA21G351),DISP=SHR               00360000
+//STEP030 EXEC PGM=SORT                                                 00370000
+//SYSPRINT DD SYSOUT=*                                                  00380000
+//SYSOUT DD SYSOUT=*                                                    00390000
+//SORTIN DD DSN=USERID.LIG.AGTCMN.PS2,DISP=SHR                          00400000
+//SORTOUT DD DSN=USERID.LIG.AGTCMN.PS2,DISP=SHR                         00410000
+//SYSIN DD DSN=USERID.LIG.AGENT.CC.PDS(CA31G351),DISP=SHR               00420000
+//STEP040 EXEC PGM=SORT                                                 00430001
+//SYSPRINT DD SYSOUT=*                                                  00440000
+//SYSOUT DD SYSOUT=*                                                    00450000
+//SORTIN DD DSN=USERID.LIG.AGTCMN.PS2,DISP=SHR                          00460000
+//SORTOF01 DD DSN=USERID.LIG.AGTCMN.ACTIVE.PS3,                         00470001
+//         DISP=(NEW,CATLG,DELETE),                                     00480000
+//         SPACE=(TRK,(1,1)),                                           00490000
+//         DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                         00500000
+//         VOL=SER=VPWRKB                                               00510000
+//SORTOF02 DD DSN=USERID.LIG.AGTCMN.INACTIVE.PS4,                       00520001
+//         DISP=(NEW,CATLG,DELETE),                                     00530001
+//         SPACE=(TRK,(1,1)),                                           00540001
+//         DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                         00550001
+//         VOL=SER=VPWRKB                                               00560001
+//SYSIN DD DSN=USERID.LIG.AGENT.CC.PDS(CA41G351),DISP=SHR               00570001
+//STEP050 EXEC PGM=SORT                                                 00580002
+//SYSPRINT DD SYSOUT=*                                                  00590002
+//SYSOUT DD SYSOUT=*                                                    00600002
+//SORTIN DD DSN=USERID.LIG.AGTCMN.ACTIVE.PS3,DISP=SHR                   00610002
+//       DD DSN=USERID.LIG.AGTCMN.INACTIVE.PS4,DISP=SHR                 00620002
+//SORTOUT DD DSN=USERID.LIG.AGTCMN.PS5,                                 00630002
+//         DISP=(NEW,CATLG,DELETE),                                     00631002
+//         SPACE=(TRK,(1,1)),                                           00632002
+//         DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                         00633002
+//         VOL=SER=VPWRKB                                               00634002
+//SYSIN DD DSN=USERID.LIG.AGENT.CC.PDS(CA51G351),DISP=SHR               00640002
+//STEP060 EXEC PGM=IDCAMS                                               00650002
+//SYSPRINT DD SYSOUT=*                                                  00660002
+//SYSOUT DD SYSOUT=*                                                    00670002
+//SYSIN DD DSN=USERID.LIG.AGENT.CC.PDS(CA61G351),DISP=SHR               00680002
+//IFSTP01 IF STEP060.RC=0 THEN                                          00690002
+//STEP070 EXEC PGM=SORT                                                 00700002
+//SYSPRINT DD SYSOUT=*                                                  00710002
+//SYSOUT DD SYSOUT=*                                                    00720002
+//SORTIN DD DSN=USERID.LIG.AGTCMN.PS2,DISP=SHR                          00730002
+//SORTOUT DD DSN=USERID.LIG.AGTCMN.PS6,                                 00740002
+//         DISP=(NEW,CATLG,DELETE),                                     00750002
+//         SPACE=(TRK,(1,1)),                                           00760002
+//         DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                         00770002
+//         VOL=SER=VPWRKB                                               00780002
+//SYSIN DD DSN=USERID.LIG.AGENT.CC.PDS(CA71G351),DISP=SHR               00790002
+// ENDIF                                                                00800002
+//STEP080 EXEC PGM=SORT                                                 00810003
+//SYSPRINT DD SYSOUT=*                                                  00820003
+//SYSOUT DD SYSOUT=*                                                    00830003
+//SORTIN DD DSN=USERID.LIG.AGTCMN.PS2,DISP=SHR                          00840003
+//SORTOUT DD DSN=USERID.LIG.AGTCMN.PS8,                                 00850003
+//         DISP=(NEW,CATLG,DELETE),                                     00860003
+//         SPACE=(TRK,(1,1)),                                           00870003
+//         DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                         00880003
+//         VOL=SER=VPWRKB                                               00890003
+//SYSIN DD DSN=USERID.LIG.AGENT.CC.PDS(CA81G351),DISP=SHR               00900003
+

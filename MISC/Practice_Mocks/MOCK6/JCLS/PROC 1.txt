@@ -1,0 +1,72 @@
+//PA11E259 PROC                                                         00010002
+//*USER_IDA JOB NOTIFY=&SYSUID                                          00011002
+//STEP001 EXEC PGM=IEFBR14                                              00020000
+//DD1 DD DSN=USER_ID.L1E.PROD.PS2,                                      00030000
+//    DISP=(MOD,DELETE,DELETE),                                         00040000
+//    SPACE=(TRK,(0))                                                   00050000
+//DD2 DD DSN=USER_ID.L1E.PROD.PS3,                                      00060000
+//    DISP=(MOD,DELETE,DELETE),                                         00070000
+//    SPACE=(TRK,(0))                                                   00080000
+//DD3 DD DSN=USER_ID.L1E.PROD.PS4,                                      00090000
+//    DISP=(MOD,DELETE,DELETE),                                         00100000
+//    SPACE=(TRK,(0))                                                   00110000
+//DD4 DD DSN=USER_ID.L1E.PROD.PS5,                                      00120000
+//    DISP=(MOD,DELETE,DELETE),                                         00130000
+//    SPACE=(TRK,(0))                                                   00140000
+//DD5 DD DSN=USER_ID.L1E.PROD.PS6,                                      00150000
+//    DISP=(MOD,DELETE,DELETE),                                         00160000
+//    SPACE=(TRK,(0))                                                   00170000
+//STEP002 EXEC PGM=SORT                                                 00180000
+//SYSPRINT DD SYSOUT=*                                                  00190000
+//SYSOUT DD SYSOUT=*                                                    00200000
+//SORTIN DD DSN=USER_ID.L1E.PROD.PS1,DISP=SHR                           00210000
+//SORTOUT DD DSN=USER_ID.L1E.PROD.PS2,                                  00220000
+//        DISP=(NEW,CATLG,DELETE),                                      00230000
+//        SPACE=(TRK,(1,1)),                                            00240000
+//        DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                          00250000
+//        VOL=SER=ZAPRD7                                                00260000
+//SYSIN DD DSN=USER_ID.L1E.PROD.CC.PDS(CA11E259),DISP=SHR               00270000
+//STEP003 EXEC PGM=SORT                                                 00280000
+//SYSPRINT DD SYSOUT=*                                                  00290000
+//SYSOUT DD SYSOUT=*                                                    00300000
+//SORTIN DD DSN=USER_ID.L1E.PROD.PS1,DISP=SHR                           00310000
+//SORTOUT DD DSN=USER_ID.L1E.PROD.PS3,                                  00320000
+//        DISP=(NEW,CATLG,DELETE),                                      00330000
+//        SPACE=(TRK,(1,1)),                                            00340000
+//        DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                          00350000
+//        VOL=SER=ZAPRD7                                                00360000
+//SYSIN DD DSN=USER_ID.L1E.PROD.CC.PDS(CA21E259),DISP=SHR               00370000
+//STEP004 EXEC PGM=IDCAMS                                               00380000
+//SYSPRINT DD SYSOUT=*                                                  00390000
+//SYSOUT DD SYSOUT=*                                                    00400000
+//SYSIN DD DSN=USER_ID.L1E.PROD.CC.PDS(CA31E259),DISP=SHR               00410000
+//IFSTP1  IF STEP003.RC=0 THEN                                          00420000
+//STEP005 EXEC PGM=SORT                                                 00430000
+//SYSPRINT DD SYSOUT=*                                                  00440000
+//SYSOUT DD SYSOUT=*                                                    00450000
+//SORTIN DD DSN=USER_ID.L1E.PROD.PS3,DISP=SHR                           00460000
+//SORTOUT DD DSN=USER_ID.L1E.PROD.PS4,                                  00470000
+//        DISP=(NEW,CATLG,DELETE),                                      00480000
+//        SPACE=(TRK,(1,1)),                                            00490000
+//        DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                          00500000
+//        VOL=SER=ZAPRD7                                                00510000
+//SYSIN DD DSN=USER_ID.L1E.PROD.CC.PDS(CA41E259),DISP=SHR               00520000
+// ELSE                                                                 00551000
+//STEP006 EXEC PGM=SORT                                                 00552000
+//SYSPRINT DD SYSOUT=*                                                  00553000
+//SYSOUT DD SYSOUT=*                                                    00554000
+//SORTIN DD DSN=USER_ID.L1E.PROD.PS2,DISP=SHR                           00555000
+//SORTOUT DD DSN=USER_ID.L1E.PROD.PS5,                                  00556000
+//        DISP=(NEW,CATLG,DELETE),                                      00557000
+//        SPACE=(TRK,(1,1)),                                            00558000
+//        DCB=(RECFM=FB,LRECL=80,BLKSIZE=800),                          00559000
+//        VOL=SER=ZAPRD7                                                00559100
+//SYSIN DD DSN=USER_ID.L1E.PROD.CC.PDS(CA51E259),DISP=SHR               00559200
+// ENDIF                                                                00560000
+//STEP007 EXEC PGM=SORT                                                 00570000
+//SYSPRINT DD SYSOUT=*                                                  00580000
+//SYSOUT DD SYSOUT=*                                                    00590000
+//SORTIN DD DSN=USER_ID.L1E.PROD.PS4,DISP=SHR                           00600000
+//SORTOUT DD DSN=USER_ID.L1E.PROD.PS4,DISP=SHR                          00610000
+//SYSIN DD DSN=USER_ID.L1E.PROD.CC.PDS(CA61E259),DISP=SHR               00620001
+

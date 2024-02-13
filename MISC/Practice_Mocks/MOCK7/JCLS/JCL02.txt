@@ -1,0 +1,46 @@
+//USERIDB JOB NOTIFY=&SYSUID                                            00010000
+//STEP001 EXEC PGM=IDCAMS                                               00020000
+//SYSPRINT DD SYSOUT=*                                                  00030000
+//SYSOUT DD SYSOUT=*                                                    00040000
+//SYSIN DD *                                                            00050000
+   DELETE USERID.L2C.CRSE.KSDS CLUSTER                                  00051000
+   IF LASTCC>0 THEN SET MAXCC=0                                         00052000
+   DEFINE CLUSTER(NAME(USERID.L2C.CRSE.KSDS) -                          00060000
+   CISZ(4096) -                                                         00070000
+   RECORDSIZE(80,80) -                                                  00080000
+   TRACKS(1,1) -                                                        00090000
+   VOLUMES(VPWRKB) -                                                    00100000
+   INDEXED -                                                            00110000
+   KEYS(5,0) -                                                          00120000
+   FREESPACE(10,10))                                                    00130000
+/*                                                                      00140000
+//STEP002 EXEC PGM=SORT                                                 00150000
+//SYSPRINT DD SYSOUT=*                                                  00160000
+//SYSOUT DD SYSOUT=*                                                    00170000
+//SORTIN DD DSN=USERID.CLIENT.SRTOP,DISP=SHR                            00171000
+//SORTOUT DD DSN=USERID.L2C.CRSE.KSDS,DISP=SHR                          00172000
+//SYSIN DD *                                                            00180000
+   SORT FIELDS=(1,5,CH,A)                                               00190000
+/*                                                                      00210000
+//STEP003 EXEC PGM=IDCAMS                                               00220000
+//SYSPRINT DD SYSOUT=*                                                  00230000
+//SYSOUT DD SYSOUT=*                                                    00240000
+//SYSIN DD *                                                            00250000
+   DEFINE AIX(NAME(USERID.L2C.CRSE.KSDS.AIX) -                          00260000
+   RELATE(USERID.L2C.CRSE.KSDS) -                                       00270000
+   RECORDSIZE(80,80) -                                                  00280000
+   NONUNIQUEKEY -                                                       00290000
+   CISZ(4096) -                                                         00300000
+   TRACKS(1,1) -                                                        00310000
+   VOLUMES(VPWRKB) -                                                    00320000
+   FREESPACE(10,10) -                                                   00330000
+   KEYS(20,6))                                                          00340000
+/*                                                                      00350000
+//STEP004 EXEC PGM=IDCAMS                                               00360000
+//SYSPRINT DD SYSOUT=*                                                  00370000
+//SYSOUT DD SYSOUT=*                                                    00380000
+//SYSIN DD *                                                            00390000
+   BLDINDEX IDS(USERID.L2C.CRSE.KSDS) -                                 00400000
+   ODS(USERID.L2C.CRSE.KSDS.AIX)                                        00410000
+/*                                                                      00420000
+

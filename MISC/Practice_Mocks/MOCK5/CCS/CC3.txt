@@ -1,0 +1,2 @@
+  MERGE FIELDS=(1,5,CH,A)
+

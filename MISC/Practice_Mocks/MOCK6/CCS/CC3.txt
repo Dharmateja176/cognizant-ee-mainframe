@@ -1,0 +1,2 @@
+  PRINT IDS(USER_ID.L1E.PROD.PS3) COUNT(1)                              00010000
+
