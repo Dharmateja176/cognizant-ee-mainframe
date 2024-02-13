@@ -1,9 +1,9 @@
-//TECN258  JOB (TECN258),'DHARMA',CLASS=A,         
+//USER_ID  JOB (USER_ID),'DHARMA',CLASS=A,         
 //         MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID
 //STEP1    EXEC PGM=SORT                           
 //SYSOUT   DD SYSOUT=*                             
-//SORTIN   DD DSN=TECN258.EMPREC.PS1,DISP=SHR               
-//SORTOUT  DD DSN=TECN258.EMPREC.SORT.PS1,DISP=SHR        
+//SORTIN   DD DSN=USER_ID.EMPREC.PS1,DISP=SHR               
+//SORTOUT  DD DSN=USER_ID.EMPREC.SORT.PS1,DISP=SHR        
 //*            DISP=(NEW,CATLG,DELETE),             
 //*            SPACE=(TRK,(1,1)),                   
 //*            DCB=(LRECL=80,RECFM=FB,DSORG=PS)     

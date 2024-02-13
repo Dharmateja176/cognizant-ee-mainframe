@@ -1,4 +1,7 @@
 ## Hello!
+
+**Please use it for only educational Purposes**
+
 **Pull Requests** are appreciated, but please follow the folder structure.  
 
 - Can be PDFs for quiz's or a simple markdown/text.

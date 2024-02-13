@@ -1,7 +1,7 @@
-//TECN258R JOB (DEV),'DHARMA',NOTIFY=&SYSUID,                           
+//USER_IDR JOB (DEV),'DHARMA',NOTIFY=&SYSUID,                           
 //             CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1)                        
-//PROCLOC JCLLIB ORDER=TECN258.JCL.CC01.PDS                             
-//STEP010 EXEC PROC=CATDSCRT,DSNAME=TECN258.JCL.CC01.PS2                
+//PROCLOC JCLLIB ORDER=USER_ID.JCL.CC01.PDS                             
+//STEP010 EXEC PROC=CATDSCRT,DSNAME=USER_ID.JCL.CC01.PS2                
 //SYSPRINT DD SYSOUT=*                                                  
 /*                                                                      
 //STEP020 EXEC PGM=IEBGENER                                             
@@ -11,10 +11,10 @@
 //SYSUT1 DD *                                                           
 ***EMPLOYEE SAMPLE DATA***                                              
 /*                                                                      
-//SYSUT2 DD DSN=TECN258.JCL.CC01.PS2,DISP=SHR                           
+//SYSUT2 DD DSN=USER_ID.JCL.CC01.PS2,DISP=SHR                           
 //STEP030 EXEC PGM=IDCAMS                                               
 //SYSPRINT DD SYSOUT=*                                                  
-//INDD DD DSN=TECN258.JCL.CC01.PS1,DISP=SHR                             
+//INDD DD DSN=USER_ID.JCL.CC01.PS1,DISP=SHR                             
 //SYSIN DD *                                                            
    PRINT INFILE(INDD) COUNT(1)                                         
 /*                                                                     
@@ -29,8 +29,8 @@ INPUT DATASET IS EMPTY
 //STEP050 EXEC PGM=SORT                                                 
 //SYSPRINT DD SYSOUT=*                                                  
 //SYSOUT DD SYSOUT=*                                                    
-//SORTIN DD DSN=TECN258.JCL.CC01.PS1,DISP=SHR                           
-//SORTOUT DD DSN=TECN258.JCL.CC01.PS2,DISP=MOD                          
+//SORTIN DD DSN=USER_ID.JCL.CC01.PS1,DISP=SHR                           
+//SORTOUT DD DSN=USER_ID.JCL.CC01.PS2,DISP=MOD                          
 //SYSIN DD *                                                            
   SORT FIELDS=COPY,SKIPREC=1,STOPAFT=2                                  
 /*                                                                      

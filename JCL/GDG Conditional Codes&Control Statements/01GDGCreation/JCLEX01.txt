@@ -1,9 +1,9 @@
-//TECN258 JOB (DEV),'pardhu',CLASS=A,
+//USER_ID JOB (DEV),'pardhu',CLASS=A,
 //        MSGCLASS=A,MSGLEVEL=(1,1),NOTIFY=&SYSUID
 //STEP1 EXEC PGM=IDCAMS
 //SYSPRINT DD SYSOUT=*
 //SYSIN DD *
-  DEFINE GDG(NAME(TECN258.TEST.BCK.GDG1) -
+  DEFINE GDG(NAME(USER_ID.TEST.BCK.GDG1) -
              LIMIT(5)                    -
              NOEMPTY                     -
              SCRATCH)

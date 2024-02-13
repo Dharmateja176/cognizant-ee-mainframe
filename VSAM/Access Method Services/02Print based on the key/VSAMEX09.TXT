@@ -1,9 +1,9 @@
-//TECN258E  JOB NOTIFY=&SYSUID
+//USER_IDE  JOB NOTIFY=&SYSUID
 //STEP1 EXEC PGM=IDCAMS                      
 //SYSPRINT DD SYSOUT=*                       
 //SYSIN DD *                                 
     PRINT -                                   
-    INDATASET(TECN258.TRAIN.DETAILS.KSDS) -   
+    INDATASET(USER_ID.TRAIN.DETAILS.KSDS) -   
     FROMKEY(10230) -                          
     TOKEY(18790) CHAR
 /*
