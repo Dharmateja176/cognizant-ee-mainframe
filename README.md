@@ -7,5 +7,5 @@
 Few points  
 
 - README's are bit helpful, Please try to read if you come across.  
-- Contributions are always appreciated.. If you wish to contribute, Please read more at [Contribute](/CONTRIBUTING.md)
+- Contributions are always appreciated.. If you wish to contribute, Please read more at [CONTRIBUTE](/CONTRIBUTING.md)
 - Some codes may not wok at all instances. So please be aware
