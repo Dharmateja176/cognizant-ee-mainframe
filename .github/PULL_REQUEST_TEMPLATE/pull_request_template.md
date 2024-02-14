@@ -5,7 +5,7 @@
 - [ ] New code addition
 - [ ] Fixing bug in existing item
 - [ ] Removing item from list
-- [ ] Changing structure (organization) of list
+- [ ] Changing structure of list
 
 ### Proposed Changes
 
