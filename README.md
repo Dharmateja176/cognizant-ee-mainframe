@@ -1,8 +1,11 @@
-## Hello!
+## Mainframes
 
-**Please use this repo for educational Purposes**
+### Hello! 
 
-**Pull Requests** are appreciated, but please follow the folder structure.  
+> **Please use this repo for educational Purposes**
 
-- Can be PDFs for quiz's or a simple markdown/text.
-- Clone the repo, add your files, submit for a pull request.
+Few points  
+
+- README's are bit helpful, Please try to read if you come across.  
+- Contributions are always appreciated.. If you wish to contribute, Please read more at [Contribute](/CONTRIBUTING.md)
+- Some codes may not wok at all instances. So please be aware
