@@ -1,0 +1,6 @@
+//USER_IDA JOB NOTIFY=&SYSUID                                           00010002
+//RUN EXEC PGM=COBEX05                       --> MEMBER NAME            00040005
+//STEPLIB DD DSN=USER_ID.MYLIB.LOADLIB,DISP=SHR  --> LOADLIB NAME       00050005
+//SYSPRINT DD SYSOUT=*                                                  00060000                               00090000
+//SYSIN DD DUMMY                                                        00100000
+
