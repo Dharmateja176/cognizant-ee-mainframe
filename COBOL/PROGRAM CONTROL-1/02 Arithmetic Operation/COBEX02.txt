@@ -1,0 +1,37 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. COBEX02.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 WS-CLASS-01.
+            05 WS-MARK-01 PIC 9(3).
+            05 WS-MARK-02 PIC 9(3).
+            05 WS-MARK-03 PIC 9(3).
+            05 WS-MARK-04 PIC 9(3).
+            05 WS-MARK-05 PIC 9(3).
+        01 WS-CLASS-02.
+            05 WS-MARK-01 PIC 9(3).
+            05 WS-MARK-02 PIC 9(3).
+            05 WS-MARK-03 PIC 9(3).
+            05 WS-MARK-04 PIC 9(3).
+            05 WS-MARK-05 PIC 9(3).
+        01 WS-SUB-DIFF PIC 9(3).
+        PROCEDURE DIVISION.
+        0000-MAIN-PARA.
+        1000-INITIALIZE-PARA.
+                INITIALIZE WS-CLASS-01 WS-CLASS-02.
+        2000-PROCESS-PARA.
+                ACCEPT WS-CLASS-01.
+                MOVE 080060075050095 TO WS-CLASS-02.
+                SUBTRACT WS-MARK-03 OF WS-CLASS-01 
+                FROM WS-MARK-03 OF WS-CLASS-02 
+                GIVING WS-SUB-DIFF.
+                ADD CORR WS-CLASS-01 TO WS-CLASS-02
+                ON SIZE ERROR DISPLAY "OVERFLOW OCCURED".
+                DISPLAY "CONTENT OF WS-CLASS-02:" 
+                WS-CLASS-02.
+                DISPLAY "CONTENT OF WS-MARK-03:" 
+                WS-MARK-03 OF WS-CLASS-02.
+                DISPLAY "MARK-03 DIFFERENCE BETWEEN CLASSES:" 
+                WS-SUB-DIFF.
+        9000-TERMINATION-PARA.
+            STOP RUN.

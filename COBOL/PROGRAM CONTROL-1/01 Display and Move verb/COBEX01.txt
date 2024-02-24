@@ -1,0 +1,33 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. COBEX01.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 WS-TRAIN-DETAILS.
+              05 TRAIN-NUMBER       PIC 9(6).
+              05 TRAIN-NAME         PIC X(20).
+              05 TRAIN-TYPE         PIC X(2).
+              05 DEPARTURE-STATION  PIC A(20).
+              05 DEPARTURE-TIME     PIC X(5).
+              05 ARRIVAL-STATION    PIC A(20).
+              05 ARRIVAL-TIME       PIC X(5).
+              05 FARE               PIC 9(4).
+        PROCEDURE DIVISION.
+        MAIN-PARA.
+              MOVE 106510 TO TRAIN-NUMBER.
+              MOVE 'KANYAKUMARI EXPRESS' TO TRAIN-NAME.
+              MOVE 'SF' TO TRAIN-TYPE.
+              MOVE 'KANYAKUMARI' TO DEPARTURE-STATION.
+              MOVE '10:00' TO DEPARTURE-TIME.
+              MOVE 'NEW DELHI' TO ARRIVAL-STATION.
+              MOVE '20:00' TO ARRIVAL-TIME.
+              MOVE 500 TO FARE.
+              DISPLAY 'TRAIN NUMBER   :' TRAIN-NUMBER.
+              DISPLAY 'TRAIN NAME     :' TRAIN-NAME .
+              DISPLAY 'TRAIN-TYPE     :' TRAIN-TYPE.
+              DISPLAY 'DEPARTURE STN  :' DEPARTURE-STATION.
+              DISPLAY 'DEPARTURE TIME :' DEPARTURE-TIME.
+              DISPLAY 'ARRIVAL-STN    :' ARRIVAL-STATION.
+              DISPLAY 'ARRIVAL-TIME   :' ARRIVAL-TIME.
+              DISPLAY 'TRAIN FARE     :' FARE.
+            STOP RUN.
+
