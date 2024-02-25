@@ -1,0 +1,62 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. COBEX06.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 WS-PAY-DETAILS.
+            05 WS-FIXED.
+                10 WS-BASIC   PIC 9(5)V99.
+                10 WS-DA      PIC 9(5)V99.
+            05 WS-ADDITIONAL.
+                10 WS-HRA     PIC 9(5)v99.
+            05 WS-INCENTIVE PIC 9(5)V99.
+            05 WS-DEDUCTION.
+                10 WS-PF      PIC 9(5)v99.
+                10 WS-IT      PIC 9(5)v99.
+                10 WS-OTHER   PIC 9(5)v99.
+        66 WS-PAY-OTHER RENAMES WS-DA THRU WS-INCENTIVE.
+        66 WS-IT-PF     RENAMES WS-PF THRU WS-IT.
+        01 SLAB         PIC 9(4).
+        88 SLAB-A VALUE 1 THRU 100.
+        88 SLAB-B VALUE 101 THRU 500.
+        88 SLAB-C VALUE 501 THRU 1000.
+        01 WS-NET-PAY   PIC Z9(5).99.
+        01 WS-BASIC-PRINT PIC 9(5).99.
+        PROCEDURE DIVISION.
+        0000-MAIN-PARA.
+            PERFORM 1000-INITIALIZE-PARA THRU 9000-TERMINATION-PARA.
+        0000-MAIN-PARA-EXIT.
+            EXIT.
+        1000-INITIALIZE-PARA.
+            INITIALIZE WS-PAY-DETAILS.
+        1000-INITIALIZE-PARA-EXIT.
+            EXIT.
+        2000-PROCESS-PARA.
+            ACCEPT WS-BASIC.
+            ACCEPT WS-DA.
+            ACCEPT WS-HRA.
+            ACCEPT WS-INCENTIVE.
+            ACCEPT WS-PF.
+            ACCEPT WS-IT.
+            ACCEPT WS-OTHER.
+            MOVE WS-BASIC TO WS-BASIC-PRINT.
+            COMPUTE WS-NET-PAY = WS-BASIC + WS-DA + WS-HRA + 
+              WS-INCENTIVE - WS-PF - WS-IT - WS-OTHER.
+            COMPUTE SLAB = WS-IT  * 0.05.
+            DISPLAY "BASIC PAY IS : " WS-BASIC-PRINT.
+            DISPLAY "NET PAY IS   : " WS-NET-PAY.
+            IF SLAB-A THEN
+                DISPLAY "SLAB IS      : SLAB-A"
+            END-IF.
+            IF SLAB-B THEN 
+                DISPLAY "SLAB IS      : SLAB B"
+            END-IF.
+            IF SLAB-C THEN 
+                DISPLAY "SLAB IS      : SLAB C"
+            END-IF.
+        2000-PROCESS-PARA-EXIT.
+            EXIT.
+        9000-TERMINATION-PARA.
+            STOP RUN.
+        9000-TERMINATION-PARA-EXIT.
+            EXIT.
+
