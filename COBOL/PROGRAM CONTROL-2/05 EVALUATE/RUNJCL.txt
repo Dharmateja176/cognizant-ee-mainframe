@@ -1,0 +1,7 @@
+//USER_IDR JOB NOTIFY=&SYSUID                   
+//RUN EXEC PGM=COBEX04                          
+//STEPLIB DD DSN=USER_ID.MYLIB.LOADLIB,DISP=SHR 
+//SYSPRINT DD SYSOUT=*                          
+//SYSIN DD *
+31
+/*
