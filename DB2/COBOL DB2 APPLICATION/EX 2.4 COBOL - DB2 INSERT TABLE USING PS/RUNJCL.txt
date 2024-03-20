@@ -1,0 +1,16 @@
+//TEKUS00A JOB NOTIFY=&SYSUID,CLASS=A,MSGCLASS=X,MSGLEVEL=(1,1),        00001029
+//             REGION=0M                                                00001128
+//TRNSDBRN EXEC PGM=IKJEFT01,DYNAMNBR=20                                00040001
+//STEPLIB  DD  DISP=SHR,DSN=DSNC10.SDSNLOAD                             00050027
+//SYSTSPRT DD SYSOUT=*                                                  00080001
+//SYSPRINT DD SYSOUT=*                                                  00090001
+//SYSUDUMP DD SYSOUT=*                                                  00100001
+//SYSOUT   DD SYSOUT=*                                                  00110001
+//INBKPS  DD  DSN=TEKUS00.INPUT.BANK.PS,DISP=SHR
+//SYSTSIN  DD *                                                         00120001
+ DSN SYSTEM(DSN1)                                                       00130001
+ RUN  PROGRAM(DBEX04) PLAN(DBEX04) -                                    00140029
+      LIB('TEKUS00.DB2.LOADLIB')                                        00150029
+ END                                                                    00160001
+/*                                                                      00170001
+//SYSIN DD DUMMY                                                        00180001

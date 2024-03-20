@@ -1,0 +1,27 @@
+      ******************************************************************
+      * DCLGEN TABLE(TCOM018.BANKDET)                                  *
+      *        LIBRARY(TCOM018.DB2.DCLGEN(EX01))                       *
+      *        ACTION(REPLACE)                                         *
+      *        LANGUAGE(COBOL)                                         *
+      *        QUOTE                                                   *
+      * ... IS THE DCLGEN COMMAND THAT MADE THE FOLLOWING STATEMENTS   *
+      ******************************************************************
+           EXEC SQL DECLARE TCOM018.BANKDET TABLE
+           ( ACCNO                          INTEGER,
+             ACCNAME                        VARCHAR(20),
+             ACCTYP                         CHAR(7),
+             ACCAMT                         DECIMAL(8, 2)
+           ) END-EXEC.
+      ******************************************************************
+      * COBOL DECLARATION FOR TABLE TCOM018.BANKDET                    *
+      ******************************************************************
+       01  DCLBANKDET.
+           10 ACCNO                PIC S9(9) USAGE COMP.
+           10 ACCNAME.
+              49 ACCNAME-LEN       PIC S9(4) USAGE COMP.
+              49 ACCNAME-TEXT      PIC X(20).
+           10 ACCTYP               PIC X(7).
+           10 ACCAMT               PIC S9(6)V9(2) USAGE COMP-3.
+      ******************************************************************
+      * THE NUMBER OF COLUMNS DESCRIBED BY THIS DECLARATION IS 4       *
+      ******************************************************************

@@ -1,0 +1,7 @@
+SELECT DEPTNAME, FIRSTNAME, LASTNAME                                    00010000
+FROM GEN_DEPARTMENT, GEN_EMPLOYEE                                       00020000
+WHERE DEPTNO = WORKDEPT                                                 00030000
+AND DEPTNO NOT IN(SELECT WORKDEPT                                       00040000
+FROM GEN_EMPLOYEE                                                       00050000
+WHERE SEX = 'F')                                                        00060000
+ORDER BY DEPTNAME, FIRSTNAME;                                           00070000

@@ -1,0 +1,99 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. DBEX04.
+        ENVIRONMENT DIVISION.
+        INPUT-OUTPUT SECTION.
+        FILE-CONTROL.
+      **INPUT FILE
+             SELECT TI001-INPUT ASSIGN TO INBKPS
+             ORGANIZATION IS SEQUENTIAL
+             ACCESS MODE IS SEQUENTIAL
+             FILE STATUS IS WS-FILE-STATUS1.
+        DATA DIVISION.
+        FILE SECTION.
+        FD TI001-INPUT.
+        01 TI001-INPUT-RECORD.
+             05 TI001-ACC-NUM    PIC  9(9).
+             05 FILLER           PIC  X(1).
+             05 TI001-ACC-NAME   PIC  X(20).
+             05 FILLER           PIC  X(1).
+             05 TI001-ACC-TYPE   PIC  X(7).
+             05 FILLER           PIC  X(1).
+             05 TI001-ACC-AMT    PIC  9(6)V9(2).
+             05 FILLER           PIC  X(33).
+        WORKING-STORAGE SECTION.
+             EXEC SQL INCLUDE SQLCA END-EXEC.
+             EXEC SQL INCLUDE DCLBANK END-EXEC.
+        01 WS-G-FILE-STATUS.
+             05 WS-FILE-STATUS1  PIC  X(2).
+                88 WFS1-SUCCESS  VALUE  '00'.
+                88 WFS1-EOF      VALUE  '10'.
+        PROCEDURE DIVISION.
+        0000-MAIN-PARA.
+                 PERFORM 1000-INITIALIZATION-PARA
+                 THRU 1000-INITIALIZATION-PARA-EXIT
+                 PERFORM 2000-PROCESS-PARA THRU
+                 2000-PROCESS-PARA-EXIT
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT.
+        0000-MAIN-PARA-EXIT.
+                 EXIT.
+        1000-INITIALIZATION-PARA.
+                 DISPLAY 'INITIALIZATION-PARA'.
+        1000-INITIALIZATION-PARA-EXIT.
+                 EXIT.
+        2000-PROCESS-PARA.
+                 PERFORM 2100-FILE-OPEN-PARA THRU
+                 2100-FILE-OPEN-PARA-EXIT
+                 IF WFS1-SUCCESS
+                  PERFORM 2200-READ-PARA THRU
+                  2200-READ-PARA-EXIT UNTIL WFS1-EOF
+                 END-IF.
+        2000-PROCESS-PARA-EXIT.
+                 EXIT.
+        2100-FILE-OPEN-PARA.
+                  OPEN INPUT TI001-INPUT
+                  EVALUATE TRUE
+                  WHEN WFS1-SUCCESS
+                  CONTINUE
+                  WHEN OTHER
+                   DISPLAY 'INPUT FILE OPEN FAILED'
+                   DISPLAY 'FILE STATUS' WS-FILE-STATUS1
+                  END-EVALUATE.
+        2100-FILE-OPEN-PARA-EXIT.
+                  EXIT.
+        2200-READ-PARA.
+                  READ TI001-INPUT
+                  EVALUATE TRUE
+                  WHEN WFS1-SUCCESS
+                  PERFORM 2300-MOVE-PARA THRU 2300-MOVE-PARA
+                  WHEN WFS1-EOF
+                  CONTINUE
+                  WHEN OTHER
+                   DISPLAY 'INPUT FILE OPEN FAILED'
+                   DISPLAY 'FILE STATUS' WS-FILE-STATUS1
+                   PERFORM 9000-TERMINATION-PARA THRU
+                   9000-TERMINATION-PARA-EXIT
+                  END-EVALUATE.
+        2200-READ-PARA-EXIT.
+                  EXIT.
+        2300-MOVE-PARA.
+                  MOVE TI001-ACC-NUM  TO ACCNO
+                  MOVE 20 TO ACCNAME-LEN
+                  MOVE TI001-ACC-NAME TO ACCNAME-TEXT
+                  MOVE TI001-ACC-TYPE TO ACCTYP
+                  MOVE TI001-ACC-AMT TO ACCAMT
+                  PERFORM 2400-INSERT-PARA THRU
+                  2400-INSERT-PARA-EXIT.
+        2300-MOVE-PARA-EXIT.
+                  EXIT.
+        2400-INSERT-PARA.
+                  EXEC SQL INSERT INTO BANKDET VALUES
+                  (:ACCNO, :ACCNAME, :ACCTYP, :ACCAMT)
+                  END-EXEC.
+                  DISPLAY SQLCODE.
+        2400-INSERT-PARA-EXIT.
+                  EXIT.
+        9000-TERMINATION-PARA.
+                  STOP RUN.
+        9000-TERMINATION-PARA-EXIT.
+                  EXIT.

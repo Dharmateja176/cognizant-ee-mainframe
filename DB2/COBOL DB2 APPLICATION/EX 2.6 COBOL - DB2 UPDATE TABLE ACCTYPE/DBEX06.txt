@@ -1,0 +1,37 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. DBEX06.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+            EXEC SQL INCLUDE SQLCA END-EXEC.
+            EXEC SQL INCLUDE DCLBANK END-EXEC.
+        PROCEDURE DIVISION.
+        0000-MAIN-PARA.
+                 PERFORM 1000-INITIALIZATION-PARA THRU
+                 1000-INITIALIZATION-PARA-EXIT
+                 PERFORM 2000-PROCESS-PARA THRU
+                 2000-PROCESS-PARA-EXIT
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT.
+        0000-MAIN-PARA-EXIT.
+                 EXIT.
+        1000-INITIALIZATION-PARA.
+                 DISPLAY 'INITIALIZATION PARA'.
+        1000-INITIALIZATION-PARA-EXIT.
+                 EXIT.
+        2000-PROCESS-PARA.
+                 PERFORM 2300-UPDATE-PARA THRU
+                 2300-UPDATE-PARA-EXIT.
+        2000-PROCESS-PARA-EXIT.
+                 EXIT.
+        2300-UPDATE-PARA.
+                 MOVE 'SAVINGS' TO ACCTYP.
+                 EXEC SQL UPDATE BANKDET SET ACCTYP = :ACCTYP
+                 WHERE ACCTYP = 'SAVING'
+                 END-EXEC.
+                 DISPLAY SQLCODE.
+        2300-UPDATE-PARA-EXIT.
+                 EXIT.
+        9000-TERMINATION-PARA.
+                 STOP RUN.
+        9000-TERMINATION-PARA-EXIT.
+                 EXIT.

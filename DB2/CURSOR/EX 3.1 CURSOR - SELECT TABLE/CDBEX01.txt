@@ -1,0 +1,124 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. CDBEX01.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 WSS-ERR-MSG.
+            05 WS-ERR-MSG.
+              10 WS-ERR-LEN        PIC  S9(4) COMP VALUE 800.
+              10 WS-ERR-TEXT       PIC  X(80) OCCURS 10 TIMES.
+            05 WS-ERR-LRECL        PIC  S9(4) COMP VALUE 80.
+        01 WSS-SQLCODE             PIC  S9(3) SIGN LEADING SEPARATE.
+            88 WS-EOT              VALUE  +100.
+            88 WS-SUCCESS          VALUE  +000.
+        01 WS-EMPNO                PIC  X(06).
+        01 WS-FIRSTNAME            PIC  X(20).
+        01 WS-MGRNO                PIC  X(06).
+        01 WS-DEPTNAME             PIC  X(40).
+            EXEC SQL INCLUDE SQLCA END-EXEC.
+            EXEC SQL INCLUDE EMPDCL END-EXEC.
+            EXEC SQL INCLUDE DEPTDCL END-EXEC.
+            EXEC SQL
+            DECLARE CS-TB-EMPDEP CURSOR FOR
+            SELECT EMPNO, FIRSTNAME, MGRNO, DEPTNAME FROM
+            GEN_DEPARTMENT,GEN_EMPLOYEE
+            WHERE WORKDEPT = DEPTNO AND SALARY > 40000
+            ORDER BY EMPNO
+            END-EXEC.
+        PROCEDURE DIVISION.
+        0000-MAIN-PARA.
+                 PERFORM 1000-INITIALIZATION-PARA THRU
+                 1000-INITIALIZATION-PARA-EXIT
+                 PERFORM 2000-PROCESS-PARA THRU
+                 2000-PROCESS-PARA-EXIT
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT.
+        0000-MAIN-PARA-EXIT.
+                 EXIT.
+        1000-INITIALIZATION-PARA.
+        1000-INITIALIZATION-PARA-EXIT.
+                 EXIT.
+        2000-PROCESS-PARA.
+                 PERFORM 2100-OPEN-PARA THRU
+                 2100-OPEN-PARA-EXIT
+                 PERFORM 2200-FETCH-PARA THRU
+                 2200-FETCH-PARA-EXIT UNTIL WS-EOT
+                 PERFORM 3000-CLOSE-PARA THRU
+                 3000-CLOSE-PARA-EXIT.
+        2000-PROCESS-PARA-EXIT.
+                 EXIT.
+        2100-OPEN-PARA.
+                 EXEC SQL OPEN CS-TB-EMPDEP END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 CONTINUE
+                 WHEN WS-EOT
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT OPENED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+        2100-OPEN-PARA-EXIT.
+                 EXIT.
+        2200-FETCH-PARA.
+                 EXEC SQL FETCH CS-TB-EMPDEP INTO :EMPNO,
+                 :FIRSTNAME, :MGRNO, :DEPTNAME
+                 END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 PERFORM 2300-MOVE-PARA THRU
+                 2300-MOVE-PARA-EXIT
+                 WHEN WS-EOT
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT FETCHED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+         2200-FETCH-PARA-EXIT.
+                 EXIT.
+         3000-CLOSE-PARA.
+                 EXEC SQL CLOSE CS-TB-EMPDEP END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT CLOSED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+         3000-CLOSE-PARA-EXIT.
+                 EXIT.
+         2300-MOVE-PARA.
+                 MOVE EMPNO TO WS-EMPNO
+                 MOVE FIRSTNAME-TEXT TO WS-FIRSTNAME
+                 MOVE MGRNO TO WS-MGRNO
+                 MOVE DEPTNAME-TEXT TO WS-DEPTNAME
+                 DISPLAY 'EMPNO:' WS-EMPNO
+                 DISPLAY 'FIRSTNAME:' WS-FIRSTNAME
+                 DISPLAY 'MGRNO:' WS-MGRNO
+                 DISPLAY 'DEPTNAME:' WS-DEPTNAME
+                 MOVE SPACES TO EMPNO
+                 MOVE SPACES TO FIRSTNAME-TEXT
+                 MOVE SPACES TO MGRNO
+                 MOVE SPACES TO DEPTNAME-TEXT.
+         2300-MOVE-PARA-EXIT.
+                 EXIT.
+         9000-TERMINATION-PARA.
+                 STOP RUN.
+         9000-TERMINATION-PARA-EXIT.
+                 EXIT.
+         9100-CURSOR-CLOSE-PARA-EXIT.
+                 EXIT.

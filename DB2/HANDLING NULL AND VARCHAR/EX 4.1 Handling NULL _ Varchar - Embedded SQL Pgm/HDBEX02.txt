@@ -1,0 +1,62 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. HDBEX02.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+            EXEC SQL INCLUDE SQLCA END-EXEC.
+            EXEC SQL INCLUDE PRODDCL END-EXEC.
+        01 NULL-IND   PIC  S9(4) USAGE COMP.
+        PROCEDURE DIVISION.
+        0000-MAIN-PARA.
+                 PERFORM 1000-INITIALIZATION-PARA THRU
+                 1000-INITIALIZATION-PARA-EXIT
+                 PERFORM 2000-PROCESS-PARA THRU
+                 2000-PROCESS-PARA-EXIT
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT.
+        0000-MAIN-PARA-EXIT.
+                 EXIT.
+        1000-INITIALIZATION-PARA.
+        1000-INITIALIZATION-PARA-EXIT.
+                 EXIT.
+        2000-PROCESS-PARA.
+                 MOVE 0 TO NULL-IND.
+                 IF (NULL-IND = -1)
+                 DISPLAY 'NULL VALUE OCCURRED'
+                 CONTINUE
+                 ELSE
+                 PERFORM 2300-INSERT-PARA THRU
+                 2300-INSERT-PARA-EXIT
+                 END-IF.
+        2000-PROCESS-PARA-EXIT.
+                 EXIT.
+        2300-INSERT-PARA.
+                 MOVE 0 TO NULL-IND
+                 MOVE 'PRD15' TO PRODUCT-CODE
+                 MOVE 5 TO PRODUCT-NAME-LEN
+                 MOVE 'REDMI' TO PRODUCT-NAME-TEXT
+                 MOVE 500 TO PRODUCT-QTY
+                 MOVE 'AVL' TO PRODUCT-STATUS.
+                 EXEC SQL INSERT INTO PRODUCT_INF VALUES
+                 (:PRODUCT-CODE, :PRODUCT-NAME :NULL-IND,
+                 :PRODUCT-QTY, :PRODUCT-STATUS)
+                 END-EXEC.
+                 DISPLAY 'VALUE INSERTED'
+                 DISPLAY SQLCODE.
+                 MOVE -1 TO NULL-IND.
+                 MOVE 'PRD16' TO PRODUCT-CODE.
+                 MOVE ZEROS TO PRODUCT-NAME-LEN.
+                 MOVE SPACES TO PRODUCT-NAME-TEXT.
+                 MOVE 220 TO PRODUCT-QTY.
+                 MOVE 'NA' TO PRODUCT-STATUS.
+                 EXEC SQL INSERT INTO PRODUCT_INF VALUES
+                 (:PRODUCT-CODE, :PRODUCT-NAME :NULL-IND,
+                 :PRODUCT-QTY, :PRODUCT-STATUS)
+                 END-EXEC.
+                 DISPLAY 'VALUE INSERTED'
+                 DISPLAY SQLCODE.
+        2300-INSERT-PARA-EXIT.
+                 EXIT.
+        9000-TERMINATION-PARA.
+                 STOP RUN.
+        9000-TERMINATION-PARA-EXIT.
+                 EXIT.

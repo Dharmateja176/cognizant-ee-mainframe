@@ -1,0 +1,126 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. HDBEX03.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 WSS-ERR-MSG.
+            05 WS-ERR-MSG.
+              10 WS-ERR-LEN        PIC  S9(4) COMP VALUE 800.
+              10 WS-ERR-TEXT       PIC  X(80) OCCURS 10 TIMES.
+            05 WS-ERR-LRECL        PIC  S9(4) COMP VALUE 80.
+        01 WSS-SQLCODE             PIC  S9(3) SIGN LEADING SEPARATE.
+            88 WS-EOT              VALUE  +100.
+            88 WS-SUCCESS          VALUE  +000.
+        01 NULL-IND                PIC  S9(4) USAGE COMP.
+        01 WS-PRODUCT.
+            05  WS-PRODUCT-CODE    PIC  X(5).
+            05  WS-PRODUCT-NAME    PIC  X(20).
+            05  WS-PRODUCT-QTY     PIC  S9(9) USAGE COMP.
+            05  WS-PRODUCT-STATUS  PIC  X(3).
+            EXEC SQL INCLUDE SQLCA END-EXEC.
+            EXEC SQL INCLUDE PRODDCL END-EXEC.
+            EXEC SQL
+            DECLARE CS-TB-PROD CURSOR FOR
+            SELECT PRODUCT_CODE, PRODUCT_NAME, PRODUCT_QTY,
+            PRODUCT_STATUS FROM
+            PRODUCT_INF
+            ORDER BY PRODUCT_CODE
+            END-EXEC.
+        PROCEDURE DIVISION.
+        0000-MAIN-PARA.
+                 PERFORM 1000-INITIALIZATION-PARA THRU
+                 1000-INITIALIZATION-PARA-EXIT
+                 PERFORM 2000-PROCESS-PARA THRU
+                 2000-PROCESS-PARA-EXIT
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT.
+        0000-MAIN-PARA-EXIT.
+                 EXIT.
+        1000-INITIALIZATION-PARA.
+        1000-INITIALIZATION-PARA-EXIT.
+                 EXIT.
+        2000-PROCESS-PARA.
+                 PERFORM 2100-OPEN-PARA THRU
+                 2100-OPEN-PARA-EXIT
+                 PERFORM 2200-FETCH-PARA THRU
+                 2200-FETCH-PARA-EXIT UNTIL WS-EOT
+                 PERFORM 3000-CLOSE-PARA THRU
+                 3000-CLOSE-PARA-EXIT.
+        2000-PROCESS-PARA-EXIT.
+                 EXIT.
+        2100-OPEN-PARA.
+                 EXEC SQL OPEN CS-TB-PROD END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 CONTINUE
+                 WHEN WS-EOT
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT OPENED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+        2100-OPEN-PARA-EXIT.
+                 EXIT.
+        2200-FETCH-PARA.
+                 EXEC SQL FETCH CS-TB-PROD INTO :PRODUCT-CODE,
+                 :PRODUCT-NAME :NULL-IND, :PRODUCT-QTY,
+                 :PRODUCT-STATUS
+                 END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 PERFORM 2300-MOVE-PARA THRU
+                 2300-MOVE-PARA-EXIT
+                 WHEN WS-EOT
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT FETCHED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+         2200-FETCH-PARA-EXIT.
+                 EXIT.
+         3000-CLOSE-PARA.
+                 EXEC SQL CLOSE CS-TB-PROD END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT CLOSED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+         3000-CLOSE-PARA-EXIT.
+                 EXIT.
+         2300-MOVE-PARA.
+                 IF (NULL-IND = -1)
+                 CONTINUE
+                 ELSE
+                 MOVE PRODUCT-CODE TO WS-PRODUCT-CODE
+                 MOVE PRODUCT-NAME-TEXT TO WS-PRODUCT-NAME
+                 MOVE PRODUCT-QTY TO WS-PRODUCT-QTY
+                 MOVE PRODUCT-STATUS TO WS-PRODUCT-STATUS
+                 DISPLAY 'PRODUCT CODE :' WS-PRODUCT-CODE
+                 DISPLAY 'PRODUCT NAME :' WS-PRODUCT-NAME
+                 DISPLAY 'PRODUCT QTY  :' WS-PRODUCT-QTY
+                 DISPLAY 'PRODUCT STATUS :' WS-PRODUCT-STATUS
+                 END-IF.
+         2300-MOVE-PARA-EXIT.
+                 EXIT.
+         9000-TERMINATION-PARA.
+                 STOP RUN.
+         9000-TERMINATION-PARA-EXIT.
+                 EXIT.
+         9100-CURSOR-CLOSE-PARA-EXIT.
+                 EXIT.

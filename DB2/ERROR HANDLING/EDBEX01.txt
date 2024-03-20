@@ -1,0 +1,53 @@
+        IDENTIFICATION DIVISION.                                        00010000
+        PROGRAM-ID. EDBEX01.                                            00020000
+        DATA DIVISION.                                                  00030000
+        WORKING-STORAGE SECTION.                                        00040000
+            EXEC SQL INCLUDE SQLCA END-EXEC.                            00050000
+            EXEC SQL INCLUDE DCLBANK END-EXEC.                          00060000
+        01 WSS-ERR-MSG.                                                 00070000
+            05 WS-ERR-MSG.                                              00080000
+            10 WS-ERR-LEN       PIC  S9(4) COMP VALUE +720.             00090000
+            10 WS-ERR-TEXT      PIC  X(80) OCCURS 10 TIMES              00100000
+                                INDEXED BY ERROR-INDEX.                 00110000
+            10 WS-ERR-LRECL     PIC  S9(9) COMP VALUE +72.              00120001
+        01 WSS-SQLCODE          PIC  S9(3) SIGN LEADING SEPARATE.       00130000
+            88 WS-EOT              VALUE  +100.                         00140000
+            88 WS-SUCCESS          VALUE  +000.                         00150000
+        01 WS-BANKDET.                                                  00160000
+            05 WS-ACC-NO       PIC  9(09).                              00170000
+            05 WS-ACC-NAME     PIC  X(20).                              00180000
+            05 WS-ACC-TYPE     PIC  X(07).                              00190000
+            05 WS-ACC-AMT      PIC  9(6)V9(2).                          00200000
+        PROCEDURE DIVISION.                                             00210000
+        0000-MAIN-PARA.                                                 00220000
+                 PERFORM 1000-INITIALIZATION-PARA THRU                  00230000
+                 1000-INITIALIZATION-PARA-EXIT                          00240000
+                 PERFORM 2000-PROCESS-PARA THRU                         00250000
+                 2000-PROCESS-PARA-EXIT                                 00260000
+                 PERFORM 9000-TERMINATION-PARA THRU                     00270000
+                 9000-TERMINATION-PARA-EXIT.                            00280000
+        0000-MAIN-PARA-EXIT.                                            00290000
+                 EXIT.                                                  00300000
+        1000-INITIALIZATION-PARA.                                       00310000
+                 INITIALIZE WS-BANKDET.                                 00320000
+        1000-INITIALIZATION-PARA-EXIT.                                  00330000
+                 EXIT.                                                  00340000
+        2000-PROCESS-PARA.                                              00350000
+                 PERFORM 2300-SELECT-PARA THRU                          00360000
+                 2300-SELECT-PARA-EXIT.                                 00370000
+        2000-PROCESS-PARA-EXIT.                                         00380000
+                 EXIT.                                                  00390000
+        2300-SELECT-PARA.                                               00400000
+                 EXEC SQL SELECT ACCNO,                                 00410000
+                 ACCNAME, ACCTYP, ACCAMT INTO :ACCNO, :ACCNAME,         00420000
+                 :ACCTYP, :ACCAMT FROM BANKDET                          00430000
+                 END-EXEC.                                              00440000
+                 DISPLAY SQLCODE.                                       00450000
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL    00460000
+                 DISPLAY WS-ERR-MSG.                                    00470000
+        2300-SELECT-PARA-EXIT.                                          00500000
+                 EXIT.                                                  00510000
+        9000-TERMINATION-PARA.                                          00630000
+                 STOP RUN.                                              00640000
+        9000-TERMINATION-PARA-EXIT.                                     00650000
+                 EXIT.                                                  00660000

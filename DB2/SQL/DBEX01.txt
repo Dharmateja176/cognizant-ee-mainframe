@@ -1,0 +1,17 @@
+SET CURRENT SQLID='TEKUS00';                                            00000010
+CREATE TABLE GEN_DEPARTMENT                                             00000020
+      (DEPTNO CHAR(3) NOT NULL, DEPTNAME VARCHAR(40) NOT NULL,          00000030
+      MGRNO CHAR(6) ,                                                   00000040
+          ADMRDEPT CHAR(3) NOT NULL, LOCATION  CHAR(20) , PRIMARY KEY   00000050
+      (DEPTNO));                                                        00000060
+CREATE TABLE GEN_EMPLOYEE(EMPNO CHAR(6) NOT NULL,FIRSTNAME  VARCHAR(20) 00000100
+ NOT NULL,MIDINIT CHAR(1) NOT NULL,LASTNAME  VARCHAR(20) NOT NULL,      00000200
+ WORKDEPT  CHAR(3),PHONENO   CHAR(10)                                   00000400
+    CONSTRAINT PHONE_DIG CHECK                                          00000600
+       (PHONENO >= '0000000000' AND PHONENO <= '9999999999')  ,         00000700
+  DOJ DATE,JOB CHAR(8), EDLEVEL SMALLINT, SEX CHAR(1),                  00000800
+  DOB DATE, SALARY DECIMAL(9,2), BONUS DECIMAL(9,2),                    00000900
+       COMM      DECIMAL(9,2)  ,                                        00001100
+       PRIMARY KEY (EMPNO)     ,                                        00001200
+       FOREIGN KEY RED (WORKDEPT) REFERENCES GEN_DEPARTMENT             00001300
+    ON DELETE SET NULL   );                                             00001400

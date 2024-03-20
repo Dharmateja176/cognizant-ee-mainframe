@@ -1,0 +1,205 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. CDBEX03.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 WSS-ERR-MSG.
+            05 WS-ERR-MSG.
+              10 WS-ERR-LEN        PIC  S9(4) COMP VALUE 800.
+              10 WS-ERR-TEXT       PIC  X(80) OCCURS 10 TIMES.
+            05 WS-ERR-LRECL        PIC  S9(4) COMP VALUE 80.
+        01 WSS-SQLCODE             PIC  S9(3) SIGN LEADING SEPARATE.
+            88 WS-EOT              VALUE  +100.
+            88 WS-SUCCESS          VALUE  +000.
+        01 WS-EMPLOY.
+            05 WS-EMPNO      PIC  X(6).
+            05 WS-FIRSTNAME  PIC  X(20).
+            05 WS-EDLEVEL    PIC  S9(4) USAGE COMP.
+            05 WS-JOB        PIC  X(8).
+            05 WS-SALARY     PIC  S9(7)V9(2) USAGE COMP-3.
+            05 WS-BONUS      PIC  S9(7)V9(2) USAGE COMP-3.
+            EXEC SQL INCLUDE SQLCA END-EXEC.
+            EXEC SQL INCLUDE EMPDCL END-EXEC.
+            EXEC SQL
+            DECLARE CS-TB-EMPU CURSOR FOR
+            SELECT EMPNO, FIRSTNAME, EDLEVEL,JOB,SALARY,BONUS FROM
+            GEN_EMPLOYEE WHERE EDLEVEL IN (18,20)
+            FOR UPDATE OF SALARY
+            END-EXEC.
+            EXEC SQL
+            DECLARE CS-TB-EMPS CURSOR FOR
+            SELECT EMPNO, FIRSTNAME, EDLEVEL,JOB,SALARY,BONUS FROM
+            GEN_EMPLOYEE WHERE EDLEVEL IN (18,20)
+            ORDER BY EMPNO
+            END-EXEC.
+        PROCEDURE DIVISION.
+        0000-MAIN-PARA.
+                 PERFORM 1000-INITIALIZATION-PARA THRU
+                 1000-INITIALIZATION-PARA-EXIT
+                 PERFORM 2000-PROCESS-PARA THRU
+                 2000-PROCESS-PARA-EXIT
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT.
+        0000-MAIN-PARA-EXIT.
+                 EXIT.
+        1000-INITIALIZATION-PARA.
+        1000-INITIALIZATION-PARA-EXIT.
+                 EXIT.
+        2000-PROCESS-PARA.
+                 PERFORM 2100-OPEN-PARA THRU
+                 2100-OPEN-PARA-EXIT
+                 PERFORM 2200-FETCH-PARA THRU
+                 2200-FETCH-PARA-EXIT UNTIL WS-EOT
+                 PERFORM 3000-CLOSE-PARA THRU
+                 3000-CLOSE-PARA-EXIT.
+                 PERFORM 3100-OPEN-PARA THRU
+                 3100-OPEN-PARA-EXIT
+                 PERFORM 3200-FETCH-PARA THRU
+                 3200-FETCH-PARA-EXIT UNTIL WS-EOT
+                 PERFORM 4000-CLOSE-PARA THRU
+                 4000-CLOSE-PARA-EXIT.
+        2000-PROCESS-PARA-EXIT.
+                 EXIT.
+        2100-OPEN-PARA.
+                 EXEC SQL OPEN CS-TB-EMPU END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 CONTINUE
+                 WHEN WS-EOT
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT OPENED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 END-EVALUATE.
+        2100-OPEN-PARA-EXIT.
+                 EXIT.
+        2200-FETCH-PARA.
+                 EXEC SQL FETCH CS-TB-EMPU INTO :EMPNO,
+                 :FIRSTNAME, :EDLEVEL, :JOB, :SALARY, :BONUS
+                 END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 CONTINUE
+                 PERFORM 2300-UPDATE-PARA THRU
+                 2300-UPDATE-PARA-EXIT
+                 WHEN WS-EOT
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT FETCHED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+         2200-FETCH-PARA-EXIT.
+                 EXIT.
+         3000-CLOSE-PARA.
+                 EXEC SQL CLOSE CS-TB-EMPU END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT CLOSED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 END-EVALUATE.
+         3000-CLOSE-PARA-EXIT.
+                 EXIT.
+         2300-UPDATE-PARA.
+                 IF SALARY > 40000 THEN
+                  EXEC SQL UPDATE GEN_EMPLOYEE
+                  SET SALARY = SALARY + 500
+                  WHERE CURRENT OF CS-TB-EMPU
+                  END-EXEC
+                  ELSE IF SALARY < 40000 THEN
+                  EXEC SQL UPDATE GEN_EMPLOYEE
+                  SET SALARY = SALARY + 1000
+                  WHERE CURRENT OF CS-TB-EMPU
+                  END-EXEC
+                  CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                  END-IF.
+         2300-UPDATE-PARA-EXIT.
+                  EXIT.
+        3100-OPEN-PARA.
+                 EXEC SQL OPEN CS-TB-EMPS END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 CONTINUE
+                 WHEN WS-EOT
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT OPENED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+        3100-OPEN-PARA-EXIT.
+                 EXIT.
+        3200-FETCH-PARA.
+                 EXEC SQL FETCH CS-TB-EMPS INTO :EMPNO,
+                 :FIRSTNAME, :EDLEVEL, :JOB, :SALARY, :BONUS
+                 END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 CONTINUE
+                 PERFORM 2400-MOVE-PARA THRU
+                 2400-MOVE-PARA-EXIT
+                 WHEN WS-EOT
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT FETCHED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+         3200-FETCH-PARA-EXIT.
+                 EXIT.
+         4000-CLOSE-PARA.
+                 EXEC SQL CLOSE CS-TB-EMPS END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT CLOSED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+         4000-CLOSE-PARA-EXIT.
+                 EXIT.
+         2400-MOVE-PARA.
+                 MOVE EMPNO TO WS-EMPNO
+                 MOVE FIRSTNAME-TEXT TO WS-FIRSTNAME
+                 MOVE EDLEVEL TO WS-EDLEVEL
+                 MOVE JOB TO WS-JOB
+                 MOVE SALARY TO WS-SALARY
+                 MOVE BONUS TO WS-BONUS
+                 DISPLAY 'EMPNO : ' WS-EMPNO.
+                 DISPLAY 'FIRSTNAME :' WS-FIRSTNAME.
+                 DISPLAY 'EDLEVEL :' WS-EDLEVEL.
+                 DISPLAY 'JOB :' WS-JOB
+                 DISPLAY 'SALARY :' WS-SALARY.
+                 DISPLAY 'BONUS :' WS-BONUS.
+         2400-MOVE-PARA-EXIT.
+                 EXIT.
+         9000-TERMINATION-PARA.
+                 STOP RUN.
+         9000-TERMINATION-PARA-EXIT.
+                 EXIT.
+         9100-CURSOR-CLOSE-PARA-EXIT.
+                 EXIT.

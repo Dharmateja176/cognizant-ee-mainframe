@@ -1,0 +1,55 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. DBEX09.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+            EXEC SQL INCLUDE SQLCA END-EXEC.
+            EXEC SQL INCLUDE DCLBANK END-EXEC.
+        77 WS-CNT-SV-ACCNO    PIC S9(04) USAGE COMP.
+        77 WS-CNT-CR-ACCNO    PIC S9(04) USAGE COMP.
+        PROCEDURE DIVISION.
+        0000-MAIN-PARA.
+                 PERFORM 1000-INITIALIZATION-PARA THRU
+                 1000-INITIALIZATION-PARA-EXIT
+                 PERFORM 2000-PROCESS-PARA THRU
+                 2000-PROCESS-PARA-EXIT
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT.
+        0000-MAIN-PARA-EXIT.
+                 EXIT.
+        1000-INITIALIZATION-PARA.
+        1000-INITIALIZATION-PARA-EXIT.
+                 EXIT.
+        2000-PROCESS-PARA.
+                 PERFORM 2300-SELECT-PARA THRU
+                 2300-SELECT-PARA-EXIT.
+        2000-PROCESS-PARA-EXIT.
+                 EXIT.
+        2300-SELECT-PARA.
+                 EXEC SQL
+                 SELECT COUNT(ACCNO) INTO :WS-CNT-SV-ACCNO
+                 FROM BANKDET WHERE ACCTYP = 'SAVINGS'
+                 END-EXEC.
+                 EXEC SQL
+                 SELECT COUNT(ACCNO) INTO :WS-CNT-CR-ACCNO
+                 FROM BANKDET WHERE ACCTYP = 'CURRENT'
+                 END-EXEC.
+                 PERFORM 2400-DISPLAY-PARA THRU
+                 2400-DISPLAY-PARA-EXIT.
+        2300-SELECT-PARA-EXIT.
+                 EXIT.
+        2400-DISPLAY-PARA.
+                 IF WS-CNT-CR-ACCNO > WS-CNT-SV-ACCNO THEN
+                 DISPLAY 'MAJOR ACCOUNT TYPE IN THE BANK IS CURRENT'
+                 ELSE IF WS-CNT-CR-ACCNO < WS-CNT-SV-ACCNO THEN 
+                 DISPLAY 'MAJOR ACCOUNT TYPE IN THE BANK IS SAVING'
+                 ELSE IF WS-CNT-CR-ACCNO = WS-CNT-SV-ACCNO THEN 
+                 DISPLAY 'THE BANK HAS EQUAL NUMBER OF ACCOUNT TYPE'
+                 ELSE
+                 DISPLAY 'ACCOUNT TYPE IS INCORRECT'
+                 END-IF.
+        2400-DISPLAY-PARA-EXIT.
+                 EXIT.
+        9000-TERMINATION-PARA.
+                 STOP RUN.
+        9000-TERMINATION-PARA-EXIT.
+                 EXIT.

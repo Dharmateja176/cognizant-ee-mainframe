@@ -1,0 +1,60 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. DBEX03.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+            EXEC SQL INCLUDE SQLCA END-EXEC.
+            EXEC SQL INCLUDE DCLBANK END-EXEC.
+        01 WS-BANK.
+            05 WS-ACC-NO       PIC  9(09).
+            05 WS-ACC-NAME     PIC  X(20).
+            05 WS-ACC-TYPE     PIC  X(07).
+            05 WS-ACC-AMT      PIC  9(6)V9(2).
+        PROCEDURE DIVISION.
+        0000-MAIN-PARA.
+                 PERFORM 1000-INITIALIZATION-PARA THRU
+                 1000-INITIALIZATION-PARA-EXIT
+                 PERFORM 2000-PROCESS-PARA THRU
+                 2000-PROCESS-PARA-EXIT
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT.
+        0000-MAIN-PARA-EXIT.
+                 EXIT.
+        1000-INITIALIZATION-PARA.
+                 INITIALIZE WS-BANK.
+        1000-INITIALIZATION-PARA-EXIT.
+                 EXIT.
+        2000-PROCESS-PARA.
+                 PERFORM 2100-ACCEPT-PARA THRU
+                 2100-ACCEPT-PARA-EXIT
+                 PERFORM 2200-MOVE-PARA THRU
+                 2200-MOVE-PARA-EXIT
+                 PERFORM 2300-INSERT-PARA THRU
+                 2300-INSERT-PARA-EXIT.
+        2000-PROCESS-PARA-EXIT.
+                 EXIT.
+        2100-ACCEPT-PARA.
+                 ACCEPT WS-ACC-NO.
+                 ACCEPT WS-ACC-NAME.
+                 ACCEPT WS-ACC-TYPE.
+                 ACCEPT WS-ACC-AMT.
+        2100-ACCEPT-PARA-EXIT.
+                 EXIT.
+        2200-MOVE-PARA.
+                 MOVE WS-ACC-NO TO ACCNO
+                 MOVE 7 TO ACCNAME-LEN
+                 MOVE WS-ACC-NAME TO ACCNAME-TEXT
+                 MOVE WS-ACC-TYPE TO ACCTYP
+                 MOVE WS-ACC-AMT TO ACCAMT.
+        2200-MOVE-PARA-EXIT.
+                 EXIT.
+        2300-INSERT-PARA.
+                 EXEC SQL INSERT INTO BANKDET VALUES
+                 (:ACCNO, :ACCNAME, :ACCTYP, :ACCAMT)
+                 END-EXEC.
+                 DISPLAY SQLCODE.
+        2300-INSERT-PARA-EXIT.
+                 EXIT.
+        9000-TERMINATION-PARA.
+                 STOP RUN.
+        9000-TERMINATION-PARA-EXIT.
+                 EXIT.

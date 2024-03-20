@@ -1,0 +1,2 @@
+SELECT EMPNO, LASTNAME, DOB, SALARY FROM GEN_EMPLOYEE WHERE SALARY >    00010008
+45000;                                                                  00020009

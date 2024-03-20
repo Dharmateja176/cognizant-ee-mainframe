@@ -30,4 +30,4 @@
             COMPUTE OUTPUT-NUMBER = (OUTPUT-NUMBER * 10 ) + REM.
         REV-FUNC-PARA-EXIT.
             EXIT.
-          
+

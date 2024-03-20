@@ -1,0 +1,155 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. CC01CB01.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+               SELECT INFILE ASSIGN TO INPRDS
+               ORGANIZATION IS SEQUENTIAL
+               ACCESS MODE  IS SEQUENTIAL
+               FILE STATUS  IS WS-FS1.
+               SELECT OUTFILE ASSIGN TO OUTPRDS
+               ORGANIZATION IS SEQUENTIAL
+               ACCESS MODE  IS SEQUENTIAL
+               FILE STATUS  IS WS-FS2.
+       DATA DIVISION.
+       FILE SECTION.
+       FD INFILE.
+       01 INREC.
+           02 I-PRODUCT-CODE    PIC X(5).
+           02 FILLER            PIC X(1).
+           02 I-QUANTITY        PIC 9(3).
+           02 FILLER            PIC X(1).
+           02 I-ORDER-STATUS    PIC X(10).
+           02 FILLER            PIC X(1).
+           02 I-EXPIRY-STATUS   PIC X(10).
+           02 FILLER            PIC X(1).
+           02 I-EXPIRY-DATE     PIC X(10).
+           02 FILLER            PIC X(38).
+       FD OUTFILE.
+       01 OUTREC.
+           02 O-PRODUCT-CODE    PIC X(5).
+           02 FILLER            PIC X(1).
+           02 O-QUANTITY        PIC 9(3).
+           02 FILLER            PIC X(1).
+           02 O-ORDER-STATUS    PIC X(10).
+           02 FILLER            PIC X(1).
+           02 O-EXPIRY-STATUS   PIC X(10).
+           02 FILLER            PIC X(1).
+           02 O-EXPIRY-DATE     PIC X(10).
+           02 FILLER            PIC X(1).
+           02 O-PRIORITY        PIC X(5).
+           02 FILLER            PIC X(32).
+       WORKING-STORAGE SECTION.
+       77 WS-FS1                PIC 9(2).
+       77 WS-FS2                PIC 9(2).
+       01 WS-CURRENT-DATE.
+            02 WS-CURRENT-DAY      PIC 9(2).
+            02 FILLER              PIC X(1)   VALUE "-".
+            02 WS-CURRENT-MONTH    PIC 9(2).
+            02 FILLER              PIC X(1)   VALUE "-".
+            02 WS-CURRENT-YEAR     PIC 9(4).
+            02 FILLER              PIC X(1).
+       PROCEDURE DIVISION.
+       0000-MAIN-PARA.
+           PERFORM 1000-INITIALIZE-PARA THRU
+                   1000-INITIALIZE-PARA-EXIT.
+           PERFORM 2000-PROCESS-PARA THRU
+                   2000-PROCESS-PARA-EXIT.
+           PERFORM 9000-TERMINATION-PARA THRU
+                   9000-TERMINATION-PARA-EXIT.
+       0000-MAIN-PARA-EXIT.
+           EXIT.
+       1000-INITIALIZE-PARA.
+           INITIALIZE WS-FS1 WS-FS2.
+       1000-INITIALIZE-PARA-EXIT.
+           EXIT.
+       2000-PROCESS-PARA.
+            PERFORM 2100-FILE-OPEN-PARA THRU
+                    2100-FILE-OPEN-PARA-EXIT.
+           PERFORM 2200-FILE-READ-PARA THRU
+                   2200-FILE-READ-PARA-EXIT UNTIL WS-FS1 = 10.
+           PERFORM 3000-FILE-CLOSE-PARA THRU
+                   3000-FILE-CLOSE-PARA-EXIT.
+       2000-PROCESS-PARA-EXIT.
+           EXIT.
+       2100-FILE-OPEN-PARA.
+           OPEN INPUT INFILE.
+           EVALUATE TRUE
+              WHEN WS-FS1 = 00
+                   CONTINUE
+              WHEN OTHER
+                   DISPLAY "INFILE OPEN FAILED" WS-FS1
+           END-EVALUATE.
+           OPEN OUTPUT OUTFILE.
+           EVALUATE TRUE
+              WHEN WS-FS2 = 00
+                   CONTINUE
+              WHEN OTHER
+                   DISPLAY "OUTFILE OPEN FAILED" WS-FS2
+           END-EVALUATE.
+       2100-FILE-OPEN-PARA-EXIT.
+           EXIT.
+       2200-FILE-READ-PARA.
+           READ INFILE.
+           EVALUATE TRUE
+              WHEN WS-FS1 = 00
+                  ACCEPT WS-CURRENT-DATE FROM DATE YYYYMMDD
+                 PERFORM CAL-PARA THRU CAL-PARA-EXIT
+              WHEN WS-FS1 = 10
+                   CONTINUE
+              WHEN OTHER
+                   DISPLAY "INFILE READ FAILED" WS-FS1
+           END-EVALUATE.
+       2200-FILE-READ-PARA-EXIT.
+           EXIT.
+       CAL-PARA.
+           EVALUATE TRUE
+             WHEN I-EXPIRY-DATE(1:2) <= WS-CURRENT-DATE(7:2) OR
+                  I-EXPIRY-DATE(3:2) <= WS-CURRENT-DATE(5:2) OR
+                  I-EXPIRY-DATE(5:4) <= WS-CURRENT-DATE(1:4)
+                   MOVE "EXPIRED" TO O-EXPIRY-STATUS
+                   MOVE "RETURN" TO O-ORDER-STATUS
+                   MOVE "NA" TO O-PRIORITY
+              WHEN I-EXPIRY-DATE(1:2) >  WS-CURRENT-DATE(7:2) OR
+                   I-EXPIRY-DATE(3:2) >  WS-CURRENT-DATE(5:2) OR
+                   I-EXPIRY-DATE(5:4) >  WS-CURRENT-DATE(1:4)
+                   MOVE "NOTEXPIRED" TO O-EXPIRY-STATUS
+                   MOVE "ORDER" TO O-ORDER-STATUS
+                   EVALUATE TRUE
+                      WHEN I-QUANTITY >= 75
+                           MOVE "HIGH" TO O-PRIORITY
+                      WHEN I-QUANTITY < 75
+                           MOVE "LOW" TO O-PRIORITY
+                   END-EVALUATE
+            END-EVALUATE.
+            PERFORM 2300-WRITE-PARA THRU 2300-WRITE-PARA-EXIT.
+       CAL-PARA-EXIT.
+           EXIT.
+       2300-WRITE-PARA.
+            MOVE I-PRODUCT-CODE TO O-PRODUCT-CODE.
+            MOVE I-QUANTITY TO O-QUANTITY.
+            MOVE I-EXPIRY-DATE TO O-EXPIRY-DATE.
+            WRITE OUTREC.
+            EVALUATE TRUE
+               WHEN WS-FS2 = 00
+                    CONTINUE
+               WHEN OTHER
+                    DISPLAY "WRITE FAILED" WS-FS2
+            END-EVALUATE.
+       2300-WRITE-PARA-EXIT.
+            EXIT.
+       3000-FILE-CLOSE-PARA.
+            CLOSE INFILE OUTFILE.
+            EVALUATE TRUE
+               WHEN WS-FS1 = 00 AND WS-FS2 = 00
+                    CONTINUE
+               WHEN OTHER
+                    DISPLAY "WRITE FAILED" WS-FS1 WS-FS2
+            END-EVALUATE.
+       3000-FILE-CLOSE-PARA-EXIT.
+           EXIT.
+       9000-TERMINATION-PARA.
+           STOP RUN.
+       9000-TERMINATION-PARA-EXIT.
+           EXIT.
+

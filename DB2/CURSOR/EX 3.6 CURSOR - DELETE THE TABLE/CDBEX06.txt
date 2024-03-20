@@ -1,0 +1,117 @@
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. CDBEX06.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 WSS-ERR-MSG.
+            05 WS-ERR-MSG.
+              10 WS-ERR-LEN        PIC  S9(4) COMP VALUE 800.
+              10 WS-ERR-TEXT       PIC  X(80) OCCURS 10 TIMES.
+            05 WS-ERR-LRECL        PIC  S9(4) COMP VALUE 80.
+        01 WSS-SQLCODE             PIC  S9(3) SIGN LEADING SEPARATE.
+            88 WS-EOT              VALUE  +100.
+            88 WS-SUCCESS          VALUE  +000.
+            EXEC SQL INCLUDE SQLCA END-EXEC.
+            EXEC SQL INCLUDE EMPDCL END-EXEC.
+            EXEC SQL
+            DECLARE CS-TB-EMPLD CURSOR FOR
+            SELECT EMPNO, FIRSTNAME,MIDINIT, LASTNAME,WORKDEPT,
+            PHONENO,DOJ,JOB,EDLEVEL,SEX,DOB,SALARY,BONUS,COMM FROM
+            GEN_EMPLOYEE WHERE DOB < '01/01/1985'
+            FOR UPDATE OF DOB
+            END-EXEC.
+        PROCEDURE DIVISION.
+        0000-MAIN-PARA.
+                 PERFORM 1000-INITIALIZATION-PARA THRU
+                 1000-INITIALIZATION-PARA-EXIT
+                 PERFORM 2000-PROCESS-PARA THRU
+                 2000-PROCESS-PARA-EXIT
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT.
+        0000-MAIN-PARA-EXIT.
+                 EXIT.
+        1000-INITIALIZATION-PARA.
+        1000-INITIALIZATION-PARA-EXIT.
+                 EXIT.
+        2000-PROCESS-PARA.
+                 PERFORM 2100-OPEN-PARA THRU
+                 2100-OPEN-PARA-EXIT
+                 PERFORM 2200-FETCH-PARA THRU
+                 2200-FETCH-PARA-EXIT UNTIL WS-EOT
+                 PERFORM 3000-CLOSE-PARA THRU
+                 3000-CLOSE-PARA-EXIT.
+        2000-PROCESS-PARA-EXIT.
+                 EXIT.
+        2100-OPEN-PARA.
+                 EXEC SQL OPEN CS-TB-EMPLD END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 DISPLAY 'CURSOR OPENED'
+                 WHEN WS-EOT
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT OPENED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+        2100-OPEN-PARA-EXIT.
+                 EXIT.
+        2200-FETCH-PARA.
+                 EXEC SQL FETCH CS-TB-EMPLD INTO :EMPNO,
+                 :FIRSTNAME, :MIDINIT, :LASTNAME,:WORKDEPT,:PHONENO,
+                 :DOJ, :JOB, :EDLEVEL, :SEX, :DOB, :SALARY,
+                 :BONUS, :COMM
+                 END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 DISPLAY 'CURSOR FETCHED'
+                 PERFORM 2300-DELETE-PARA THRU
+                 2300-DELETE-PARA-EXIT
+                 WHEN WS-EOT
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT FETCHED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+         2200-FETCH-PARA-EXIT.
+                 EXIT.
+         3000-CLOSE-PARA.
+                 EXEC SQL CLOSE CS-TB-EMPLD END-EXEC.
+                 MOVE SQLCODE TO WSS-SQLCODE
+                 EVALUATE TRUE
+                 WHEN WS-SUCCESS
+                 DISPLAY 'CURSOR CLOSED'
+                 CONTINUE
+                 WHEN OTHER
+                 DISPLAY 'CURSOR NOT CLOSED'
+                 DISPLAY 'ERROR STATUS' SQLCODE
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG
+                 PERFORM 9000-TERMINATION-PARA THRU
+                 9000-TERMINATION-PARA-EXIT
+                 END-EVALUATE.
+         3000-CLOSE-PARA-EXIT.
+                 EXIT.
+         2300-DELETE-PARA.
+                 EXEC SQL DELETE FROM IBMUSER.GEN_EMPLOYEE
+                 WHERE CURRENT OF CS-TB-EMPLD
+                 END-EXEC.
+                 DISPLAY SQLCODE.
+                 CALL 'DSNTIAR' USING SQLCA, WS-ERR-MSG WS-ERR-LRECL
+                 DISPLAY WS-ERR-MSG.
+         2300-DELETE-PARA-EXIT.
+                 EXIT.
+         9000-TERMINATION-PARA.
+                 STOP RUN.
+         9000-TERMINATION-PARA-EXIT.
+                 EXIT.
+         9100-CURSOR-CLOSE-PARA-EXIT.
+                 EXIT.
